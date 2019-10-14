@@ -1,0 +1,15 @@
+default menu.c32
+prompt <%= @prompt %>
+timeout <%= @timeout %>
+
+<% @builds.each do | val | -%>
+label <%= val['label'] %>
+	MENU LABEL <%= val['label'] %>
+	kernel <%= val['kernel'] %>
+	append <%= val['options'] %>
+<% end %>
+
+label local
+	MENU LABEL Boot From Local Disk
+	MENU DEFAULT
+	localboot 0

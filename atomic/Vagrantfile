@@ -1,0 +1,18 @@
+#Vagrant::Config.run do | config |
+Vagrant.configure(2) do | config |
+    # Atomic Host
+    config.vm.define :openshift do | openshift |
+      config.vm.provider "virtualbox" do | vb |
+        vb.memory = 3096
+        vb.name = "OpenShift"
+      end
+      openshift.vm.host_name = "openshift.localdomain"
+      openshift.vm.network "public_network", bridge: 'wlp1s0'
+      openshift.vm.provision :shell, :path => 'bin/openshift.sh'
+    end
+
+  # Defaults
+  config.vm.box = "bento/centos-7.4"
+  config.ssh.username = "vagrant"
+  #config.ssh.password = "vagrant"
+end

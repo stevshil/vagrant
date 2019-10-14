@@ -1,0 +1,1 @@
+docker run -d --name teamcity -v /vagrant/teamcity:/data/teamcity_server/datadir -v /vagrant/teamcity:/opt/teamcity/logs -p 1180:8111 jetbrains/teamcity-server

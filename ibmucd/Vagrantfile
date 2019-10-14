@@ -1,0 +1,34 @@
+Vagrant.configure(2) do | config |
+  # Basic Linux CentOS 7 64 bit
+  # Neueda Unix as an enterprise platform
+
+    # uDeploy
+    config.vm.define :udeploy do | udeploy |
+      config.vm.provider "virtualbox" do | vb |
+        vb.memory = 4096
+        vb.name = "uDeploy Server"
+      end
+      udeploy.vm.host_name = "ucdserver.localdomain"
+      udeploy.vm.provision "shell", :path => "bin/udeploy.sh"
+      udeploy.vm.network "private_network", ip: "192.168.1.10", virtualbox__intnet: true
+      udeploy.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: 'tcp'
+      udeploy.vm.network "forwarded_port", guest: 8111, host: 8111, protocol: 'tcp'
+    end
+
+    # uDeploy client where app will be deployed
+    config.vm.define :uapp do | uapp |
+      config.vm.provider "virtualbox" do | vb |
+        vb.memory = 1024
+        vb.name = "uDeploy Client"
+      end
+      uapp.vm.host_name = "ucdclien.localdomain"
+      uapp.vm.provision "shell", :path => "bin/uapp.sh"
+      uapp.vm.network "private_network", ip: "192.168.1.100", virtualbox__intnet: true
+    end
+
+  # Defaults
+  config.vm.box = "bento/centos-7.2"
+  config.ssh.username = "vagrant"
+  #config.ssh.password = "vagrant"
+  #config.ssh.private_key_path= "#{ENV['HOME']}/.ssh/vagrant_id"
+end

@@ -1,0 +1,35 @@
+#Vagrant::Config.run do | config |
+Vagrant.configure(2) do | config |
+  # Kubernetes Master
+  config.vm.define :kubem do | kubem |
+    config.vm.provider "virtualbox" do | vb |
+      vb.memory = 2048
+      vb.name = "Kubernetes Master"
+      vb.cpus = 2
+    end
+    kubem.vm.host_name = "kubemaster.localdomain"
+    kubem.vm.network "private_network", ip: "192.168.205.10"
+    kubem.vm.provision :shell, :path => 'bin/kubernetes.sh'
+    kubem.vm.provision :shell, privileged: false, :path => 'bin/kubeuser.sh'
+  end
+
+  # Kubernetes Workers
+  (1 .. 2).each do | number |
+    config.vm.define "kubew-#{number}" do | kubew |
+      config.vm.provider "virtualbox" do | vb |
+        vb.memory = 2048
+        vb.name = "Kubernetes Worker #{number}"
+        vb.cpus = 2
+      end
+      kubew.vm.host_name = "kubeworker#{number}.localdomain"
+      kubew.vm.network "private_network", ip: "192.168.205.1#{number}"
+      kubew.vm.provision :shell, :path => 'bin/kubernetes.sh'
+    end
+  end
+
+  # Defaults
+  config.vm.box = "bento/centos-7.4"
+  config.ssh.username = "vagrant"
+  #config.ssh.password = "vagrant"
+
+end

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Script to configure host for logstash
+# Author: Steve Shilling
+# Date: 31 May 2018
+
+# Requires private IP of ELK server as argument
+
+if (( $# < 1 ))
+then
+	echo "Please enter private IP of ELK server" 1>&2
+	exit 1
+fi
+
+if ! grep 'elk\.training\.local' /etc/hosts >/dev/null 2>&1
+then
+	echo "$1	elk.training.local" >>/etc/hosts
+else
+	sed -i "s/^.*elk.training.local/$1	elk.training.local" /etc/hosts
+fi
+

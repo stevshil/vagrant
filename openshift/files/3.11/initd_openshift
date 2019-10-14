@@ -1,0 +1,44 @@
+#!/bin/bash
+# OpenShift control script
+# chkconfig: 35 99 99
+# description: Openshift service control
+
+function start {
+  writeConfig=$1
+  # Check if oc cluster has already been launched
+  #PublicIP=$(ifconfig | grep -A3 docker0 | grep inet | awk '{print $2}')
+  PublicIP=appsrv.training.local
+  PrivateIP=$(ifconfig | grep -A3 enp0s3 | grep inet | awk '{print $2}')
+  export PublicIP PrivateIP
+
+  #oc cluster up --public-hostname="$PublicIP" --routing-suffix="${PublicIP}" --host-data-dir=/openshift/data --host-volumes-dir=/openshift/vmvolumes --host-pv-dir=/openshift/pvdir --host-config-dir=/openshift/config
+  oc cluster up --public-hostname="$PublicIP" --routing-suffix="${PublicIP}" --base-dir=/openshift --write-config=${writeConfig}
+}
+
+case $1 in
+  'clean')
+    oc cluster down
+    for x in $(sudo mount | grep openshift | awk '{print $3}')
+    do
+      sudo umount $x
+    done
+    rm -f /openshift
+    start true
+    ;;
+
+  'start')
+    start false
+    ;;
+
+  'stop')
+    oc cluster down
+    ;;
+
+  'status')
+    docker ps
+    ;;
+  'restart')
+    oc cluster down
+    sleep 30
+    start
+esac

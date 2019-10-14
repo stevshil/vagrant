@@ -1,0 +1,7 @@
+- hosts: web
+  tasks:
+  - name: Add authorized key
+    lineinfile:
+      dest: /home/vagrant/.ssh/authorized_keys
+      state: present
+      line: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4GONbzmZQXKJJDMZRSGTjo2EM7FWJf1qEZjnoyF+wwUzoogaV1+riY+vHmCMiGOB2J4fRIpcpMV4TjUxS5Mch6DgCur9kg0xkivlTPYgTUhcEVQHOI8URBScrPhMWNDLM5xrAhux+qzZslyG3z47O5/abTIBkeA4bTl1MM47R1kcAILjqU48eqXQ69bxLYE9WBz4fPOzS9V4oov98ukX6MSicegeW9762uioTn0GvnfsU74Ya3zv2ZNi3gEajcqRbeWl4B5zpNLrs23JEAoTybl8VZ5AiqgIrPf59W2hk8C1HVL4smLpEvZqfSk5ryUE6nxukpwzZbRZS5g3vtf6Z steve@tpsserv.localdomain'

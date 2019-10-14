@@ -1,0 +1,48 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          indexscript
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Description:       Create the index.html file for this server
+### END INIT INFO
+
+SCRIPT=indexscript
+RUNAS=root
+
+PIDFILE=/var/run/indexscript.pid
+LOGFILE=/var/log/indexscript.log
+
+# description: Create the index.html file for this server
+# chkconfig: 235 99 99
+
+if [[ -e /etc/lsb-release ]]
+then
+  root=/usr/share/nginx/html
+  osrelease=$(grep DISTRIB_DESCRIPTION /etc/lsb-release | awk -F= '{print $2}')
+  nic="eth1"
+else
+  root=/var/www/html
+  osrelease=$(cat /etc/redhat-release)
+  nic="enp0s8:"
+fi
+
+case $1 in
+  'start')
+    echo "My name is Steve<br>
+IP Address: $(ifconfig | sed -n "/^${nic}/,/RX packets/p" | grep 'inet ' | awk '{print $2}')<br>
+Operating System: ${osrelease}<br>
+Web server: Apache" >${root}/index.html
+    ;;
+  'stop')
+    echo "I do not have a process to stop"
+    ;;
+  'display')
+    cat ${root}/index.html
+    ;;
+  *)
+    echo "I do not understand that argument"
+    ;;
+esac

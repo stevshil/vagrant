@@ -1,0 +1,246 @@
+#!/bin/bash
+# VM to run program for Dev and PS
+# VM has it's own rpm repository and maven repo
+
+echo "Turning off SELinux"
+setenforce 0
+grep -v setenforce /etc/rc.local && echo "setenforce 0" >>/etc/rc.local
+
+# For provisioning put the real repos in place
+[ -d /etc/oldrepos ] && rm /etc/yum.repos.d/local.repo
+[ -d /etc/oldrepos ] && mv /etc/oldrepos/*.repo /etc/yum.repos.d/
+
+# Create local repository directory
+mkdir /var/localrepo
+
+echo "Making networking more reliable"
+if rpm -qa | grep NetworkManager >/dev/null 2>&1
+then
+  yum -y erase NetworkManager
+  systemctl enable network
+  systemctl start network
+fi
+
+# Remove Java 1.7
+yum -y erase java-1.7.0-openjdk java-1.7.0-openjdk-headless
+
+# Remove the installed version of Mariadb
+yum -y erase mariadb-libs mariadb mariadb-server
+
+if ! rpm -qa | grep deltarpm | grep -v grep >/dev/null
+then
+        yum -y install deltarpm
+fi
+
+if ! rpm -qa | grep yum-utils | grep -v grep >/dev/null
+then
+	yum -y install yum-utils
+fi
+
+echo "Updating the OS"
+yum -y update
+
+# Include kernel headers for the guest additions
+yum -y groupinstall "Development Tools"
+yum -y install kernel-headers kernel-devel
+
+# Install the GUI (we'll use KDE as it's closest to Windows)
+echo "Installing GUI"
+if ! ( yum grouplist | sed -n '/Installed environment/,/Available environment/p' | grep KDE >/dev/null 2>&1 )
+then
+        yum -y groupinstall "KDE Plasma Workspaces"
+        yum -y install sharutils
+	yum -y install gdm
+fi
+
+if ! rpm -qa | grep gdm >/dev/null 2>&1
+then
+	yum -y install gdm
+	systemctl enable gdm
+fi
+
+if ! grep student /etc/passwd >/dev/null 2>&1
+then
+	echo "Adding Student user"
+	useradd -m student
+	(sleep 5; echo "neueda"; sleep 2; echo "neueda") | passwd student
+fi
+
+echo "Add student to sudoers"
+echo "student ALL=(ALL) NOPASSWD: ALL" >/etc/sudoers.d/student
+chown root:root /etc/sudoers.d/student
+chmod 644 /etc/sudoers.d/student
+
+echo "Autoenable student login"
+if ! grep AutoLoginEnable /etc/gdm/custom.conf >/dev/null 2>&1
+then
+[ ! -d /etc/gdm ] && mkdir /etc/gdm
+echo "[daemon]
+AutomaticLoginEnable=true
+AutomaticLogin=student
+
+[security]
+
+[xdmcp]
+
+[greeter]
+
+[chooser]
+
+[debug]
+
+" >/etc/gdm/custom.conf
+fi
+
+if ! (systemctl get-default | grep graphical.target >/dev/null 2>&1)
+then
+	echo "Setting GUI as default login"
+        systemctl set-default graphical.target
+fi
+
+if [ ! -e /var/othersw/mysql-connector-java-5.1.42.tar.gz ]
+then
+  echo "Downloading mysql-connector-java"
+  wget -nv https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.42.tar.gz -O /var/othersw/mysql-connector-java-5.1.42.tar.gz
+fi
+
+if ! grep enp0s8 /etc/rc.local
+then
+	echo "Enabling network interface on reboots"
+	echo "/usr/sbin/ifup enp0s8" >>/etc/rc.local
+fi
+
+# Add Docker repo so we can download Docker rpm to local repo
+echo "Adding Docker repo"
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+# Add bigger s/w repo for the downloads
+echo "Adding RPMFusion repo"
+yum -y install https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm
+
+# Google Chrome
+echo "Installing Chrome"
+yum -y install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+
+# Download all required software for standalone
+echo "Downloading RPMs for local install"
+for files in emacs-* ocaml-emacs.x86_64 protobuf-emacs.x86_64 protobuf-emacs-el.x86_64 ctags-etags.x86_64 libreoffice-* evince java-1.8.0-* icedtea-web-javadoc.noarch icedtea-web.x86_64 rabbitmq-java-client-doc.noarch rabbitmq-java-client-javadoc.noarch maven-* mysql-connector-java.noarch mysql-connector-python.noarch mysql-proxy.x86_64 mysql-proxy-devel.x86_64 mysql-utilities.noarch mariadb mariadb-devel mariadb-libs git-all python34-* docker-ce
+do
+	yum -y install --downloadonly --downloaddir=/var/localrepo $files
+done
+
+echo "Downloading other RPMs"
+if [ ! -e /var/localrepo/mysql-workbench-community-6.3.9-1.el7.x86_64.rpm ]
+then
+	echo "Downloading MySQL Workbench rpm"
+	wget -nv https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community-6.3.9-1.el7.x86_64.rpm -O /var/localrepo/mysql-workbench-community-6.3.9-1.el7.x86_64.rpm
+fi
+
+if [ ! -e /var/localrepo/logstash-2.0.0-1.noarch.rpm ]
+then
+	echo "Downloading logstash rpm"
+	wget -nv https://download.elastic.co/logstash/logstash/packages/centos/logstash-2.0.0-1.noarch.rpm -O /var/localrepo/logstash-2.0.0-1.noarch.rpm
+fi
+if [ ! -e /var/localrepo/elasticsearch-2.0.0.rpm ]
+then
+	echo "Downloading elasiticsearch rpm"
+	wget -nv https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/rpm/elasticsearch/2.0.0/elasticsearch-2.0.0.rpm -O /var/localrepo/elasticsearch-2.0.0.rpm
+fi
+
+# Eclipse plugins
+[ ! -d /var/eclipse ] && mkdir /var/eclipse
+if [ ! -e /var/eclipse/eclipse-neon-JEE.tar.gz ]
+then
+	echo "Downloading Eclipse Neon JEE"
+	wget -nv 'http://ftp.fau.de/eclipse/technology/epp/downloads/release/neon/3/eclipse-jee-neon-3-linux-gtk-x86_64.tar.gz' -O /var/eclipse/eclipse-neon-JEE.tar.gz
+fi
+if [ ! -e /var/eclipse/eclipse-neon-java.tar.gz ]
+then
+	echo "Downloading Eclipse Neon Java"
+	wget -nv 'http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/neon/3/eclipse-java-neon-3-linux-gtk-x86_64.tar.gz' -O /var/eclipse/eclipse-neon-java.tar.gz
+fi
+
+if [ ! -e /var/eclipse/pmd-eclipse-1.8.0.zip ]
+then
+	echo "Downloading PMD Eclipse plugin"
+	wget -nv "https://downloads.sourceforge.net/project/pmd-eclipse/pmd-eclipse/1.8.0/pmd-eclipse-1.8.0.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fpmd-eclipse%2F&ts=1497021578&use_mirror=10gbps-io" -O /var/eclipse/pmd-eclipse-1.8.0.zip
+fi
+
+if [ ! -e /var/eclipse/findbugs-noUpdateChecks-3.0.1.zip ]
+then
+	echo "Downloading findbugs Eclipse plugin"
+	wget -nv 'https://downloads.sourceforge.net/project/findbugs/findbugs/3.0.1/findbugs-noUpdateChecks-3.0.1.zip?r=http%3A%2F%2Ffindbugs.sourceforge.net%2Fdownloads.html&ts=1497020657&use_mirror=vorboss' -O /var/eclipse/findbugs-noUpdateChecks-3.0.1.zip
+fi
+
+if [ ! -e /var/eclipse/eclemma-2.3.3.zip ]
+then
+	echo "Downloading eclemma Eclipse plugin"
+	wget -nv http://download.eclipselab.org/eclemma/release/eclemma-2.3.3.zip -O /var/eclipse/eclemma-2.3.3.zip
+fi
+
+if [ ! -e /var/eclipse/PyDev-5.8.0.zip ]
+then
+	echo "Downloading PyDev Eclipse plugin"
+	wget -nv 'https://downloads.sourceforge.net/project/pydev/pydev/PyDev%205.8.0/PyDev%205.8.0.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fpydev%2F&ts=1497388630&use_mirror=10gbps-io' -O /var/eclipse/PyDev-5.8.0.zip
+fi
+
+# Maven
+[ ! -d /var/othersw ] && mkdir /var/othersw
+if [ ! -e /var/othersw/apache-maven-3.5.0-bin.tar.gz ]
+then
+	echo "Downloading Maven"
+	wget -nv http://mirror.ox.ac.uk/sites/rsync.apache.org/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz -O /var/othersw/apache-maven-3.5.0-bin.tar.gz
+fi
+
+if [ ! -e /var/othersw/TeamCity-2017.1.2.tar.gz ]
+then
+	echo "Downloading TeamCity"
+	wget -nv https://download.jetbrains.com/teamcity/TeamCity-2017.1.2.tar.gz -O /var/othersw/TeamCity-2017.1.2.tar.gz
+fi
+
+if [ ! -e /var/othersw/apache-activemq-5.14.5-bin.tar.gz ]
+then
+	echo "Downloading ActiveMQ"
+	wget -nv http://archive.apache.org/dist/activemq/5.14.5/apache-activemq-5.14.5-bin.tar.gz -O /var/othersw/apache-activemq-5.14.5-bin.tar.gz
+fi
+
+if [ ! -e /var/othersw/wildfly-10.1.0.Final.tar.gz ]
+then
+	echo "Downloading Wildfly"
+	wget -nv http://download.jboss.org/wildfly/10.1.0.Final/wildfly-10.1.0.Final.tar.gz -O /var/othersw/wildfly-10.1.0.Final.tar.gz
+fi
+
+if [ ! -e /var/othersw/kibana-4.2.0-linux-x64.tar.gz ]
+then
+	echo "Downloading Kibana"
+	wget -nv https://download.elastic.co/kibana/kibana/kibana-4.2.0-linux-x64.tar.gz -O /var/othersw/kibana-4.2.0-linux-x64.tar.gz
+fi
+
+echo "Moving all network repos to /etc/oldrepos"
+[ ! -d /etc/oldrepos ] && mkdir /etc/oldrepos
+mv /etc/yum.repos.d/* /etc/oldrepos
+
+echo "Setting local repo"
+echo "[local]
+name=CentOS-$releasever - Local Repo
+baseurl=file:///var/localrepo/
+gpgcheck=0
+enabled=1" >/etc/yum.repos.d/local.repo
+
+cd /var/localrepo
+createrepo --workers 4 .
+
+if [ ! -e /home/student/maven-m2.zip ]
+then
+	echo "Downloading local maven repo files"
+	wget -nv "https://www.dropbox.com/s/ib6ct23iudvs1es/maven-m2.zip?dl=0" -O /home/student/maven-m2.zip
+	chown student:student /home/student/maven-m2.zip
+fi
+
+if (( $(ps -ef | grep sbin/gdm | grep -v grep | wc -l) == 0 ))
+then
+	echo "Rebooting the VM"
+	init 6
+fi
+
+exit 0;

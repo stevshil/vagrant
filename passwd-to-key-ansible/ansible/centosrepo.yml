@@ -1,0 +1,16 @@
+- hosts: web
+  tasks:
+  - name: Install rpmfusion free
+    yum:
+     name: https://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm
+     state: latest
+     validate_certs: no
+     disable_gpg_check: yes
+    when: (ansible_distribution == "CentOS")
+  - name: Install rpmfusion nonfree
+    yum:
+     name: https://download1.rpmfusion.org/nonfree/el/updates/6/i386/rpmfusion-nonfree-release-6-1.noarch.rpm
+     state: latest
+     validate_certs: no
+     disable_gpg_check: yes
+    when: (ansible_distribution == "CentOS")

@@ -1,0 +1,45 @@
+---
+fwstart: stopped
+fwenabled: false
+
+myhosts::hosts:
+  dns.google.com:
+    ip: 8.8.8.8
+    host_aliases: dns
+  mydns.steve.local:
+    ip: 192.168.10.10
+    host_aliases: mydns
+
+gitlab::puppet_manage_config: true
+gitlab::puppet_manage_backups: true
+gitlab::puppet_manage_packages: true
+gitlab::gitlab_branch: '7.9.1'
+gitlab::external_url: 'http://gitlab.training.local'
+gitlab::ldap_enabled: false
+gitlab::ldap_host: 'ldap.training.local'
+gitlab::ldap_base: 'CN=users,CN=accounts,DC=training,DC=local'
+gitlab::ldap_port: '389'
+gitlab::ldap_uid: 'uid'
+gitlab::ldap_method: 'ssl'
+#gitlab::ldap_bind_dn: 'CN=admin,CN=users,DC=training,DC=local'
+#gitlab::ldap_password: 'secret'
+gitlab::gravatar_enabled: false
+gitlab::gitlab_default_can_create_group: false
+gitlab::gitlab_username_changing_enabled: false
+gitlab::gitlab_signup_enabled: false
+gitlab::gitlab_default_projects_features_visibility_level: 'internal'
+gitlab::ldap_sync_time: 3600
+gitlab::listen_addresses: 
+ - '0.0.0.0'
+
+installer::localDir: "/images"
+installer::aliasName: "/install"
+installer::initrd: "http://mirror.centos.org/centos/7/os/x86_64/images/pxeboot/initrd.img"
+installer::vmlinuz: "http://mirror.centos.org/centos/7/os/x86_64/images/pxeboot/vmlinuz"
+installer::liveos: "http://mirror.centos.org/centos/7/os/x86_64/LiveOS/squashfs.img"
+installer::repo: "http://mirror.centos.org/centos/7/os/x86_64/"
+
+installer::builds:
+   - label: "CentOS 7"
+     kernel: "vmlinuz"
+     options: "ksdevice=link ramdisk_size=9216 initrd=initrd.img network root=live:http://192.168.1.254/install/centos7/squashfs.img repo=http://mirror.centos.org/centos/7/os/x86_64/ ks=http://192.168.1.254/install/ks/centos7.ks kssendmac"

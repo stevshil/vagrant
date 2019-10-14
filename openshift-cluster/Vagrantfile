@@ -1,0 +1,29 @@
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.require_version ">= 1.7.2"
+
+Vagrant.configure(2) do |config|
+  config.vm.define :master do | master |
+    config.vm.provider "virtualbox" do |vb|
+       vb.memory = "4096"
+       vb.cpus = 2
+       vb.name = "OpenShift"
+    end
+    master.vm.hostname = "OpenShift"
+    master.vm.network "public_network", ip: "192.168.10.23"
+    master.vm.provision :shell, :path => 'openshift.sh'
+  end
+
+  config.vm.define :worker do | worker |
+    config.vm.provider "virtualbox" do |vb|
+       vb.memory = "2048"
+       vb.cpus = 2
+       vb.name = "OpenShift Worker"
+    end
+    worker.vm.hostname = "worker"
+    worker.vm.network "public_network", ip: "192.168.10.24"
+    #worker.vm.provision :shell, :path => 'worker.sh'
+  end
+
+  config.vm.box = 'bento/centos-7.4'
+  config.vm.box_check_update = false
+end

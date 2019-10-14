@@ -1,0 +1,94 @@
+#!/bin/bash
+# OpenShift control script
+# chkconfig: 35 99 99
+# description: Openshift service control
+# To start openshift the server must have a valid public DNS name stored in /srvname
+# /srvname can be created using the following on launch in the User Data
+#  #cloud-config
+#  runcmd:
+#     - echo "appsrvdev.conygre.com" >/srvname
+
+function clean {
+
+  echo "Stopping OpenShift" 1>&2
+  oc cluster down
+  sleep 60
+
+  echo "Removing OpenShift mounts" 1>&2
+  for x in $(sudo mount | grep openshift | awk '{print $3}')
+  do
+    sudo umount $x
+  done
+
+  sleep 30
+  echo "Removing /openshift directory" 1>&2
+  rm -rf /openshift
+  echo "Removing .kube directories" 1>&2
+  find / -name .kube -exec rm -fr {} \;
+  echo "List if /openshift exists" 1>&2
+  ls -d /openshift
+
+  #sleep 120
+  #source /root/.bashrc
+  #/bin/oc adm policy add-scc-to-user hostnetwork -z router
+}
+
+function start {
+  useExisting=$1
+  # Check if oc cluster has already been launched
+  echo "Setting Hostname/IP Address" 1>&2
+  #PublicIP=$(ifconfig | grep -A3 enp0s8 | grep 'inet ' | awk '{print $2}')
+  PublicIP=appsrv.training.local
+  PrivateIP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+  export PublicIP PrivateIP
+
+  if [[ -z ${PublicIP} ]]
+  then
+    echo "No Hostname or IP Address set in /srvname" 1>&2
+    exit 1
+  fi
+
+  # Launch with all options
+  echo "Starting OpenShift cluster" 1>&2
+  oc cluster up --public-hostname="${PublicIP}" --routing-suffix="${PublicIP}" --host-data-dir=/openshift/data --host-volumes-dir=/openshift/vmvolumes --host-pv-dir=/openshift/pvdir --host-config-dir=/openshift/config ${useExisting}
+
+  echo "Setting .bashrc with correct certs" 1>&2
+  if grep -v KUBECONFIG /root/.bashrc >/dev/null 2>&1
+  then
+        echo "export KUBECONFIG=/openshift/config/master/admin.kubeconfig" >>/root/.bashrc
+        echo "export CURL_CA_BUNDLE=/openshift/config/master/ca.crt" >>/root/.bashrc
+  fi
+
+  if grep -v KUBECONFIG /home/ec2-user/.bashrc >/dev/null 2>&1
+  then
+        echo "export KUBECONFIG=/openshift/config/master/admin.kubeconfig" >>/root/.bashrc
+        echo "export CURL_CA_BUNDLE=/openshift/config/master/ca.crt" >>/root/.bashrc
+  fi
+
+}
+
+case $1 in
+  'clean')
+    echo "Clearing out any previous OpenShift configuration" 1>&2
+    clean
+    echo "Starting new clean instance of OpenShift" 1>&2
+    start
+    ;;
+
+  'start')
+    echo "Starting OpenShift" 1>&2
+    start --use-existing-config
+    ;;
+
+  'stop')
+    oc cluster down
+    ;;
+
+  'status')
+    docker ps
+    ;;
+  'restart')
+    oc cluster down
+    sleep 60
+    start
+esac

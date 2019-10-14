@@ -1,0 +1,9 @@
+[
+  {
+    "Description": "CentOS 7.4 OVA",
+    "Format": "ova",
+    "UserBucket": {
+        "S3Bucket": "academybuckettest",
+        "S3Key": "ALcos74.ova"
+    }
+}]

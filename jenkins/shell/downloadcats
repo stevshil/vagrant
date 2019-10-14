@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#thepage=$(curl -s 'https://uktvplay.uktv.co.uk/shows/8-out-of-10-cats/watch-online/')
+
+#shows=$(echo "$thepage" | | grep video= | grep 8-out | sed 's,^.*href=",,' | sed 's,".*$,,' | sort | uniq)
+
+shows=$(curl -s 'https://uktvplay.uktv.co.uk/shows/8-out-of-10-cats/watch-online/' | grep video= | grep 8-out | sed 's,^.*href=",,' | sed 's,".*$,,' | sort | uniq | grep '^/show')
+
+for show in $(echo "$shows")
+do
+	youtube-dl "https://uktvplay.uktv.co.uk${show}" &
+	sleep 300
+done

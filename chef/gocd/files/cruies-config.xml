@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="77">
+  <server artifactsdir="artifacts" commandRepositoryLocation="default" serverId="c2347ef4-7f47-4006-8af3-4387a67702dd" >
+    <security>
+      <passwordFile path="/etc/go/gocd.pw" />
+    </security>
+  </server>
+</cruise>

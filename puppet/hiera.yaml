@@ -1,0 +1,10 @@
+:hierarchy:
+  - "%{location}/%{env}/%{role}/%{hostname}"
+  - "%{location}/%{env}/%{role}/common"
+  - "%{location}/%{env}/common"
+  - "%{location}/common"
+  - "common"
+:backends:
+  - yaml
+:yaml:
+  :datadir: '/vagrant/puppet/hiera'

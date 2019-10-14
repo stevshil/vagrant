@@ -1,0 +1,13 @@
+$TTL            86400
+@                 IN SOA            yourdomain.com.  root.yourdomain.com. (
+102     ; serial
+1H      ; refresh
+1M      ; retry
+1W      ; expiry
+1D )    ; minimum
+@                       IN NS  ns1.training.local.
+@                       IN A   192.168.10.21
+ns1                     IN A   192.168.10.21
+appsrv                  IN A   192.168.10.23
+dockerreg               IN A   192.168.10.53
+*.appsrv.training.local.                IN A   192.168.10.23

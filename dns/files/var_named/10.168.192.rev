@@ -1,0 +1,12 @@
+$TTL    86400
+@                 IN SOA          training.local. root.training.local. (
+102     ; serial
+1H      ; refresh
+1M      ; retry
+1W      ; expiry
+1D)     ; minimum
+@   IN NS    ns1.training.local.
+21  IN PTR   ns1.training.local.
+23  IN PTR   appsrv.training.local.
+24  IN PTR   appsrv2.training.local.
+53  IN PTR   dockerreg.training.local.

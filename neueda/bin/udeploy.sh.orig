@@ -1,0 +1,175 @@
+#!/bin/bash
+
+# Automate uDeploy installation
+
+yum -y install java-1.8.0-openjdk unzip
+
+# Get latest TeamCity version URL
+TCurl=$(curl --verbose -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36' -ksS 'https://data.services.jetbrains.com/products/download?code=TC&platform=linux' 2>&1 | awk '/Location/ { print $3 }')
+TCurl=$(echo $TCurl | tr -d '\r')
+TCVersion=$(basename ${TCurl})
+
+cd /vagrant/files
+if [[ ! -e /vagrant/files/${TCVersion} ]] && [[ ! -d /opt/TeamCity ]]
+then
+	wget "${TCurl}"
+fi
+
+if [[ ! -e /vagrant/files/uDeploy/IBM_URBANCODE_DEPLOY_6.2.5_MP_ML_.zip ]] && [[ ! -d /opt/uDeploy ]]
+then
+	wget https://www.dropbox.com/s/fvzxqdif3d2bgvt/IBM_URBANCODE_DEPLOY_6.2.5_MP_ML_.zip?dl=0 -O uDeploy/IBM_URBANCODE_DEPLOY_6.2.5_MP_ML_.zip
+fi
+
+if [[ ! -e /vagrant/files/uDeploy/TeamCitySourceConfig-10.910199.zip ]]
+then
+	wget https://www.dropbox.com/s/grnmuav6969fd6o/TeamCitySourceConfig-10.910199.zip?dl=0 -O uDeploy/TeamCitySourceConfig-10.910199.zip
+fi
+
+if [[ ! -e /vagrant/files/uDeploy/ibm-ucd-agent.zip ]]
+then
+	wget https://www.dropbox.com/s/j5ze1xf1mdnh9s6/ibm-ucd-agent.zip?dl=0 -O uDeploy/ibm-ucd-agent.zip
+fi
+cd -
+
+cd /opt
+if [[ ! -d /opt/TeamCity ]]
+then
+	tar xvf /vagrant/files/${TCVersion}
+fi
+
+if [[ ! -d /opt/uDeploy ]]
+then
+	mkdir /opt/uDeploy
+	cd /opt/uDeploy
+	unzip /vagrant/files/uDeploy/IBM_URBANCODE_DEPLOY_6.2.5_MP_ML_.zip
+	cd ibm-ucd-install
+	# Need to review the following to auto install;
+	# https://developer.ibm.com/answers/questions/15811/silent-install-of-urbancode-deploy.html
+	# Run automated install
+	cp /vagrant/files/uDeploy/install.properties install.properties
+	export INSTALL_SERVER_DIR=/opt/ibm-ucd/server
+	export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
+	(sleep 2; echo -e "\n"; sleep 2; echo -e "\n") | ./install-server.sh
+fi
+if [[ ! -d /opt/uDeploy/agent ]]
+then
+	cd /opt/uDeploy
+	unzip /vagrant/files/uDeploy/ibm-ucd-agent.zip
+	# The following link is the agent silent install details
+	# https://www.ibm.com/support/knowledgecenter/en/SS4GSP_6.1.1/com.ibm.udeploy.install.doc/topics/agent_install_silent.html
+	cd ibm-ucd-agent-install
+	cp /vagrant/files/uDeploy/agent-install.properties install.properties
+	./install-agent-from-file.sh install.properties
+fi
+cd -
+
+mkdir /opt/TeamCity/logs
+touch /opt/TeamCity/logs/catalina.out
+
+cat >/etc/init.d/teamcity <<_END_
+#!/bin/bash
+
+#description: TeamCity control script
+#chkconfig: 2345 99 99
+
+if [ ! -d /opt/TeamCity/logs ]
+then
+	mkdir /opt/TeamCity/logs
+fi
+
+case \$1 in
+  'start')
+	cd /opt/TeamCity
+	bin/startup.sh
+	cd /opt/TeamCity/buildAgent
+	bin/agent.sh start
+	;;
+  'stop')
+	cd /opt/TeamCity
+	bin/shutdown.sh
+	cd /opt/TeamCity/buildAgent
+	bin/agent.sh stop
+	;;
+esac
+_END_
+
+cat >/etc/init.d/ibmucd <<_END_
+#!/bin/bash
+
+#description: IBM uDeploy control script
+#chkconfig: 2345 99 99
+
+cd /opt/ibm-ucd/server
+source bin/set_env
+
+case \$1 in
+  'start')
+     bin/server start
+     ;;
+  'stop')
+     bin/server stop
+     ;;
+  'status')
+     if ! bin/server status
+     then
+       ps -ef | grep 'ibm-ucd.*server' | grep -v grep
+     fi
+     ;;
+  *)
+     echo "I'm sorry I don't understand that option"
+     ;;
+esac
+_END_
+
+cat >/etc/init.d/ibmucd-agent <<_END_
+#!/bin/bash
+
+#description: IBM uDeploy Agent control script
+#chkconfig: 2345 99 99
+
+cd /opt/ibm-ucd/agent
+
+case \$1 in
+  'start')
+     bin/agent start
+     ;;
+  'stop')
+     bin/agent stop
+     ;;
+  'status')
+     if ! bin/agent status
+     then
+       ps -ef | grep 'ibm-ucd.*agent' | grep -v grep
+     fi
+     ;;
+  *)
+     echo "I'm sorry I don't understand that option"
+     ;;
+esac
+_END_
+
+chmod +x /etc/init.d/teamcity
+chkconfig --add teamcity
+#chkconfig teamcity on
+if ! service teamcity status >/dev/null 2>&1
+then
+	service teamcity start
+fi
+
+chmod +x /etc/init.d/ibmucd
+chkconfig --add ibmucd
+#chkconfig ibmucd on
+if ! service ibmucd status >/dev/null 2>&1
+then
+	service ibmucd start
+fi
+
+chmod +x /etc/init.d/ibmucd-agent
+chkconfig --add ibmucd-agent
+if ! service ibmucd-agent status >/dev/null 2>&1
+then
+	service ibmucd-agent start
+fi
+
+# Install relay
+/vagrant/files/uDeploy/installrelay.sh

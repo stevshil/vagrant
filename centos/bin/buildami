@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if (( $# < 1 ))
+then
+	echo "SYNTAX: $0 machine"
+	exit 1
+fi
+
+vagrant up $1
+vagrant halt
+VBoxManage export "$1" -o ~/Downloads/AL${1}.ova
+aws s3 cp ~/Downloads/AL${1}.ova s3://academybuckettest/
+aws ec2 import-image --description "AL $1" --disk-containers file://bin/container-${1}.json --region us-east-1
+
+until aws ec2 describe-import-image-tasks --import-task-ids import-ami-fgpxx2z9 --region us-east-1 | jq '.ImportImageTasks[] | [.StatusMessage,.Progress]' | grep null
+do
+	sleep 60
+done
+
+echo "Image now imported"
+rm ~/Downloads/AL${1}.ova
+VBoxManage unregistervm $1 --delete

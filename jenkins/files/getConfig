@@ -1,0 +1,16 @@
+#!/bin/bash
+
+jenkinsServer="localhost"
+jenkinsPort="8080"
+if [[ -z $jenkinsPort ]]
+then
+	jenkinsURL=${jenkinsServer}
+else
+	jenkinsURL="${jenkinsServer}:${jenkinsPort}"
+fi
+jobname=$1
+token=$(./getAPIToken)
+
+#curl -X GET http://${jenkinsURL}/job/${jobname}/config.xml -u admin:${token} -o mylocalconfig.xml
+curl -sX GET http://${jenkinsURL}/job/${jobname}/config.xml -u admin:${token}
+

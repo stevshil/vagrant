@@ -1,0 +1,28 @@
+driver:
+  name: vagrant
+  vm_hostname: gocd
+  network:
+   - [ "forwarded_port", { guest: 8153, host: 8153} ]
+   - [ "forwarded_port", { guest: 8154, host: 8154} ]
+  customize:
+    memory: 2048
+
+provisioner:
+  name: chef_zero
+  chef_omnibus_install_options: -d /tmp/vagrant-cache/vagrant-omnibus
+  client_rb:
+    environment: development
+
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[gocd-tps]
+    attributes:
+      authorization:
+        sudo:
+          users:
+            - vagrant

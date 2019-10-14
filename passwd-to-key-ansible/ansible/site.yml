@@ -1,0 +1,4 @@
+- include: centosrepo.yml
+  when: (ansible_distribution == "CentOS")
+
+- include: onetask.yml

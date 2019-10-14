@@ -1,0 +1,21 @@
+#!/bin/bash
+
+jenkinsServer="localhost"
+jenkinsPort="8080"
+if [[ -z $jenkinsPort ]]
+then
+	jenkinsURL=${jenkinsServer}
+else
+	jenkinsURL="${jenkinsServer}:${jenkinsPort}"
+fi
+jobname=$1
+token=$(./getAPIToken)
+
+CRUMB=$(curl -s "http://${jenkinsURL}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)" -u admin:${token})
+
+
+if ! curl -s -XPOST "http://${jenkinsURL}/createItem?name=${jobname}" -u admin:${token} --data-binary @${jobname}.xml -H "$CRUMB" -H "Content-Type:text/xml"
+then
+	echo "Unable to create job"
+	exit 1
+fi

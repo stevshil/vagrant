@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# The variable below will get all command line arguments into the variable name
+name=$*
+
+# This runs the command GREP and looks for DISTRIB_DESCRIPTION in the /etc/lsb-release file and stores the output in osname
+osname=$(grep DISTRIB_DESCRIPTION /etc/lsb-release)
+
+# The next line will use the cat command to read the text data between the _END_ markers.  It will output the file index.html with the $name and $osname substituted for the values
+
+cat >index.html <<_END_
+my name is $name
+
+The operating system I'm using is $osname
+_END_

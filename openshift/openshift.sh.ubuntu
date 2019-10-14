@@ -1,0 +1,93 @@
+#!/bin/bash
+
+DNSIP=192.168.10.21
+VERSION=3.7
+
+# Install wget
+
+# Install docker
+
+# Get OpenShift command oc
+if [[ ! -e /usr/local/bin/oc ]]
+then
+	if [[ $VERSION == 3.7 ]]
+	then
+		if [[ ! -e /vagrant/files/3.7/openshift-origin-client-tools-v3.7.0-7ed6862-linux-64bit.tar.gz ]]
+		then
+		#wget https://github.com/openshift/origin/releases/download/v3.7.0/openshift-origin-client-tools-v3.7.0-7ed6862-linux-64bit.tar.gz
+			wget https://www.dropbox.com/s/n0me4w38zdzdtzq/openshift-origin-client-tools-v3.7.0-7ed6862-linux-64bit.tar.gz?dl=0 -O /vagrant/files/3.7/openshift-origin-client-tools-v3.7.0-7ed6862-linux-64bit.tar.gz
+		fi
+
+		tar xvf /vagrant/files/3.7/openshift-origin-client-tools-v3.7.0-7ed6862-linux-64bit.tar.gz
+		mv openshift-origin-client-tools-v3.7.0-7ed6862-linux-64bit/oc /usr/bin/
+
+	else
+
+		if [[ ! -e /vagrant/files/3.7/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz ]]
+		then
+			wget https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz -O /vagrant/files/3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+		fi
+
+		tar xvf /vagrant/files/3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+		mv openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/bin/
+	fi
+fi
+
+# Copy iptables config
+#cp -f /vagrant/files/iptables /etc/sysconfig/iptables
+#service iptables restart
+
+# Copy OpenShift control script
+cp -f /vagrant/files/$VERSION/initd_openshift /etc/init.d/openshift
+chmod 755 /etc/init.d/openshift
+
+# Copy docker registry trust
+#cp -f /vagrant/files/daemon.json /etc/docker/daemon.json
+# Set the subnet range for insecure registry
+CIDR=$(ifconfig | grep -A3 eth1 | grep 'inet ' | awk '{print $2}' | awk -F. '{print $1"."$2".0.0/16"}')
+IP=$(ifconfig | grep -A3 eth1 | grep 'inet ' | awk '{print $2}')
+#cat <<_END_ >/etc/docker/daemon.json
+#{
+#	"insecure-registries": ["172.30.0.0/16","127.0.0.0/10","$CIDR"]
+#}
+#_END_
+cat <<_END_ >/etc/docker/daemon.json
+{
+	"insecure-registries": ["172.30.0.0/16","127.0.0.0/10","192.168.10.0/24"]
+}
+_END_
+systemctl enable docker
+systemctl restart docker
+
+# Set appsrv.training.local as the hostname
+if grep appsrv.training.local /etc/hosts >/dev/null 2>&1
+then
+	if ! grep ${IP} /etc/hosts >/dev/null 2>&1
+	then
+		sed -i 's/.*appsrv.training.local.*//' /etc/hosts
+		echo "${IP}	appsrv.training.local" >>/etc/hosts
+	fi
+else
+	echo "${IP}	appsrv.training.local" >>/etc/hosts
+fi
+
+# Set DNS to our server
+cat >/etc/resolv.conf <<_END_
+nameserver $DNSIP
+_END_
+
+# Add the following to .bashrc
+if ! grep KUBECONFIG /root/.bashrc >/dev/null 2>&1
+then
+	echo "export KUBECONFIG=/openshift/config/master/admin.kubeconfig" >>/root/.bashrc
+	echo "export CURL_CA_BUNDLE=/openshift/config/master/ca.crt" >>/root/.bashrc
+fi
+
+if ! grep KUBECONFIG /home/vagrant/.bashrc >/dev/null 2>&1
+then
+	echo "export KUBECONFIG=/openshift/config/master/admin.kubeconfig" >>/home/vagrant/.bashrc
+	echo "export CURL_CA_BUNDLE=/openshift/config/master/ca.crt" >>/home/vagrant/.bashrc
+fi
+
+update-rc.d openshift defaults
+service openshift clean

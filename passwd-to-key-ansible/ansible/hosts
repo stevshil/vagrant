@@ -1,0 +1,6 @@
+[local]
+localhost
+
+[web]
+10.0.0.3 ansible_user=vagrant ansible_become=true
+10.0.0.4 ansible_user=vagrant ansible_become=true

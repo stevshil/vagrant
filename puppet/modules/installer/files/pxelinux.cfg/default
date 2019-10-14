@@ -1,0 +1,13 @@
+default menu.c32
+prompt 5
+timeout 5
+
+label CentOS 7
+	MENU LABEL CentOS 7
+	kernel vmlinuz
+	append ksdevice=link ramdisk_size=9216 initrd=initrd.img network root=live:http://192.168.1.254/install/centos7/squashfs.img repo=http://mirror.centos.org/centos/7/os/x86_64/ ks=http://192.168.1.254/install/ks/centos7.ks kssendmac
+
+label local
+	MENU LABEL Boot From Local Disk
+	MENU DEFAULT
+	localboot 0

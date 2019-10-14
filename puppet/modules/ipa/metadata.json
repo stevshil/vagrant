@@ -1,0 +1,60 @@
+{
+  "types": [
+
+  ],
+  "license": "Apache License, Version 2.0",
+  "source": "Harvard University Information Technology",
+  "dependencies": [
+    {
+      "name": "puppetlabs/firewall"
+    },
+    {
+      "name": "puppetlabs/stdlib"
+    }
+  ],
+  "checksums": {
+    "manifests/params.pp": "c92a38585063f255f0e94ff16946c7fd",
+    "Gemfile": "7f1a8c9be7f31126e881faac3ac288dc",
+    "manifests/configsudo.pp": "9b8164afcf739d8f2c59ec45b010edb0",
+    "Gemfile.lock": "c9c773d7f237a82e495a1a6780cf01d2",
+    "manifests/masterprincipal.pp": "f6a2359013ec4aade93a36db030c92d4",
+    "manifests/master.pp": "61a9eae6c28a9568439a93e18694ffb9",
+    "manifests/client.pp": "4267bd5e326c4376607b55d1e92a2a99",
+    "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc",
+    "manifests/flushcache.pp": "56fb01587be89a54f0fe28be71e8f393",
+    "manifests/clientinstall.pp": "447d4e17c1991ac136ce6a30dfb96323",
+    "templates/autofs_ldap_auth.conf.erb": "457ef7ef71e74c0f288a2c42094f78c5",
+    "lib/facter/ipa_adminuidnumber.rb": "a930cb6663db2f3c6d79a1d5e98cb10c",
+    "manifests/adminconfig.pp": "6beeef035591e543dec7f8526177dfef",
+    "Rakefile": "d0a7bcdb74658217895c7f13d3f4b1de",
+    "lib/facter/ipa_replicascheme.rb": "d98653b589082c3643a09f401ba163e8",
+    "manifests/cleanup.pp": "db03f8fe043c93b1da7a75421ac26c75",
+    "manifests/configautomount.pp": "a3a30835024c657aaf8cbd9a53d1e324",
+    "manifests/replicareplicationfirewall.pp": "4c45c41ffb583bfe8291f0b41eeb9ea7",
+    "manifests/replicapreparefirewall.pp": "28a56e8247c5216e99e835a549e5955c",
+    "manifests/replicainstall.pp": "a9ed49d4a14fd89de4af390574d8ac71",
+    "manifests/masterreplicationfirewall.pp": "19c3422e778818c58ba62efb66c51d4b",
+    "templates/sudo-ldap.conf.erb": "2bce377c861da2d139286ef70c6fbcb4",
+    "Modulefile": "ba84cfe73277b795a111ab8518a59910",
+    "manifests/replica.pp": "0e340a11814928104d552ddfa74b40cc",
+    "manifests/replicaprepare.pp": "28531ad33b936ba7a1c805e65f52b439",
+    "manifests/replicaagreement.pp": "19ced405c5e94fade6ab993371f986bf",
+    "lib/puppet/parser/functions/ipa_string2hash.rb": "c3f9518124f7dda2fb946fd890274b5e",
+    "tests/init.pp": "f247e754ddee7d6f4be48a1325c882d1",
+    "manifests/hostdelete.pp": "c781955194ae50f6e56a131da66e16f1",
+    "manifests/createreplicas.pp": "146f406451b0a4c3cf78480ea3a78434",
+    "manifests/serverinstall.pp": "64cefeba22c3169396c81d050706fb65",
+    "manifests/hostadd.pp": "8b248e2eee7ebf6cd6555b2a0502b8fa",
+    "manifests/loadbalanceconf.pp": "ecd7a292da55d50d7da180ce31c4b4d0",
+    "manifests/init.pp": "c383c3941ee1977c92182021fe12cd48",
+    "lib/facter/ipa_adminhomedir.rb": "270626ba3290bcd4ace5c7847c17d406",
+    "README.md": "c852b9c1f3b1722c3a8c3c860e8cf12a",
+    "spec/classes/ipa_spec.rb": "327ada0557dbba44d6751aa1a905b045"
+  },
+  "project_page": "https://github.com/huit/puppet-ipa",
+  "description": "This module enables Puppet management of IPA masters, replicas, and clients.  Master and replica support has been tested with RHEL6 and Red Hat IPA/FreeIPA 3.x; client support has also been tested with Ubuntu 10.04 LTS and Debian GNU/Linux 7.1 (wheezy).",
+  "version": "1.5.5",
+  "summary": "Manage IPA master, replicas, and clients",
+  "name": "huit-ipa",
+  "author": "huit"
+}

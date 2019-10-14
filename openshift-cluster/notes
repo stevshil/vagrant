@@ -1,0 +1,14 @@
+Best article on joining
+	https://github.com/openshift/origin/issues/19176
+	Not supported on oc cluster
+
+Cluster Install
+	https://docs.openshift.com/container-platform/3.5/install_config/adding_hosts_to_existing_cluster.html#adding-nodes-advanced
+	https://docs.openshift.com/container-platform/3.10/install/example_inventories.html
+	https://docs.openshift.com/container-platform/3.5/install_config/install/quick_install.html#running-an-interactive-installation
+
+managing cluster
+	https://docs.openshift.com/container-platform/3.5/admin_guide/manage_nodes.html
+
+Repo for openshift paas tools
+	http://mirror.centos.org/centos/7/paas/x86_64/openshift-origin/common/

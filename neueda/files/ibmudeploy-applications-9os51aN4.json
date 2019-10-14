@@ -1,0 +1,2287 @@
+[{
+    "name": "trade Application",
+    "description": "",
+    "enforceCompleteSnapshots": false,
+    "propSheet": {"properties": []},
+    "templatePropSheet": {
+        "name": "template",
+        "properties": []
+    },
+    "components": [
+        {
+            "name": "SupportTeam2",
+            "description": "",
+            "created": 1505122350701,
+            "componentType": "STANDARD",
+            "ignoreQualifiers": 0,
+            "importAutomatically": true,
+            "useVfs": true,
+            "active": true,
+            "deleted": false,
+            "defaultVersionType": "FULL",
+            "cleanupDaysToKeep": 0,
+            "cleanupCountToKeep": 0,
+            "sourceConfigPluginName": "TeamCity",
+            "envPropDefs": [],
+            "resPropDefs": [],
+            "versionPropDefs": [],
+            "propSheetGroup": {"propSheets": [
+                {
+                    "name": "custom",
+                    "properties": []
+                },
+                {
+                    "name": "template",
+                    "properties": []
+                },
+                {
+                    "name": "TeamCityComponentProperties",
+                    "properties": [
+                        {
+                            "name": "buildType",
+                            "value": "Support_UDeploy",
+                            "description": "",
+                            "secure": false
+                        },
+                        {
+                            "name": "extensions",
+                            "description": "",
+                            "secure": false
+                        },
+                        {
+                            "name": "password",
+                            "value": "",
+                            "description": "",
+                            "secure": true
+                        },
+                        {
+                            "name": "repoUrl",
+                            "value": "http:\/\/172.31.41.123:8080",
+                            "description": "",
+                            "secure": false
+                        },
+                        {
+                            "name": "saveFileExecuteBits",
+                            "value": "false",
+                            "description": "",
+                            "secure": false
+                        },
+                        {
+                            "name": "user",
+                            "value": "Support_Team_2",
+                            "description": "",
+                            "secure": false
+                        }
+                    ]
+                }
+            ]},
+            "processes": [
+                {
+                    "name": "CreateDB",
+                    "description": "",
+                    "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                    "takesVersion": true,
+                    "inventoryActionType": "ADD",
+                    "status": "Active",
+                    "configActionType": "ADD",
+                    "active": true,
+                    "path": "components\/44042f8d-1737-4db5-9db1-a089465972d0\/processes\/4487dddd-f13e-4365-b7a2-35b809c96587",
+                    "deleted": false,
+                    "propDefs": [],
+                    "rootActivity": {
+                        "edges": [
+                            {
+                                "to": "1dd43146a997acb644f1042f2bad75",
+                                "from": "Shell",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Shell",
+                                "from": "Download Artifacts",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Download Artifacts",
+                                "from": "Clean WorkSpace",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Clean WorkSpace",
+                                "type": "ALWAYS",
+                                "value": ""
+                            }
+                        ],
+                        "offsets": [
+                            {
+                                "name": "Clean WorkSpace",
+                                "x": -320,
+                                "y": 130,
+                                "h": 70,
+                                "w": 310
+                            },
+                            {
+                                "name": "Download Artifacts",
+                                "x": -555,
+                                "y": 236.21951219512198,
+                                "h": 70,
+                                "w": 260
+                            },
+                            {
+                                "name": "Shell",
+                                "x": -730,
+                                "y": 360,
+                                "h": 70,
+                                "w": 160
+                            },
+                            {
+                                "name": "1dd43146a997acb644f1042f2bad75",
+                                "x": -920,
+                                "y": 600,
+                                "h": 80,
+                                "w": 120
+                            }
+                        ],
+                        "layoutMode": "manual",
+                        "type": "graph",
+                        "name": "f15c9150-57ba-40a9-a60e-d625ff0906f0",
+                        "children": [
+                            {
+                                "type": "finish",
+                                "name": "1dd43146a997acb644f1042f2bad75",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 60,
+                                "commandName": "Delete Files and Directories",
+                                "pluginName": "File Utils",
+                                "properties": {
+                                    "baseDir": ".",
+                                    "includes": "*",
+                                    "excludes": "",
+                                    "followSymlinks": "false",
+                                    "caseSensitive": "true"
+                                },
+                                "type": "plugin",
+                                "name": "Clean WorkSpace",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "mysql -uroot -pneueda < .\/create_db_users.sql\nmysql -utrades_user -ppassword < .\/create_mysql.sql\n",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "type": "plugin",
+                                "name": "Shell",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 28,
+                                "commandName": "Download Artifacts",
+                                "pluginName": "IBM UrbanCode Deploy Versioned File Storage",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "artifactSetBaseDir": "",
+                                    "fileIncludePatterns": "**\/*",
+                                    "fileExcludePatterns": "",
+                                    "syncMode": "true",
+                                    "fullVerification": "true",
+                                    "setFileExecuteBits": "false",
+                                    "verifyFileIntegrity": "false",
+                                    "versionId": "${p:version.id}",
+                                    "serverUrl": "${p:server.url}",
+                                    "compId": "${p:component.id}",
+                                    "resId": "${p:resource.id}",
+                                    "charset": "",
+                                    "label": ""
+                                },
+                                "type": "plugin",
+                                "name": "Download Artifacts",
+                                "children": []
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "UpdateDB",
+                    "description": "",
+                    "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                    "takesVersion": true,
+                    "inventoryActionType": "ADD",
+                    "status": "Active",
+                    "configActionType": "ADD",
+                    "active": true,
+                    "path": "components\/44042f8d-1737-4db5-9db1-a089465972d0\/processes\/16d52178-2840-4ea6-99ba-e0f990fc51a9",
+                    "deleted": false,
+                    "propDefs": [],
+                    "rootActivity": {
+                        "edges": [
+                            {
+                                "to": "Download Artifacts",
+                                "from": "Clean Workspace",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Clean Workspace",
+                                "type": "ALWAYS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Shell",
+                                "from": "Download Artifacts",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "9733e38c10a41bce934031c05b21f8",
+                                "from": "Shell",
+                                "type": "SUCCESS",
+                                "value": ""
+                            }
+                        ],
+                        "offsets": [
+                            {
+                                "name": "9733e38c10a41bce934031c05b21f8",
+                                "x": -1080,
+                                "y": 410,
+                                "h": 80,
+                                "w": 120
+                            },
+                            {
+                                "name": "Download Artifacts",
+                                "x": -602.0430107526881,
+                                "y": 211.6129032258064,
+                                "h": 70,
+                                "w": 260
+                            },
+                            {
+                                "name": "Shell",
+                                "x": -840,
+                                "y": 303.01075268817203,
+                                "h": 70,
+                                "w": 160
+                            },
+                            {
+                                "name": "Clean Workspace",
+                                "x": -350,
+                                "y": 110,
+                                "h": 70,
+                                "w": 310
+                            }
+                        ],
+                        "layoutMode": "manual",
+                        "type": "graph",
+                        "name": "f8d16c83-3fb1-47e4-9a1d-db6b8ae34c01",
+                        "children": [
+                            {
+                                "type": "finish",
+                                "name": "9733e38c10a41bce934031c05b21f8",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 60,
+                                "commandName": "Delete Files and Directories",
+                                "pluginName": "File Utils",
+                                "properties": {
+                                    "baseDir": ".",
+                                    "includes": "*",
+                                    "excludes": "",
+                                    "followSymlinks": "false",
+                                    "caseSensitive": "true"
+                                },
+                                "type": "plugin",
+                                "name": "Clean Workspace",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 28,
+                                "commandName": "Download Artifacts",
+                                "pluginName": "IBM UrbanCode Deploy Versioned File Storage",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "artifactSetBaseDir": "",
+                                    "fileIncludePatterns": "src\/data\/sqlUpdate\/*.sql",
+                                    "fileExcludePatterns": "",
+                                    "syncMode": "true",
+                                    "fullVerification": "true",
+                                    "setFileExecuteBits": "false",
+                                    "verifyFileIntegrity": "false",
+                                    "versionId": "${p:version.id}",
+                                    "serverUrl": "${p:server.url}",
+                                    "compId": "${p:component.id}",
+                                    "resId": "${p:resource.id}",
+                                    "charset": "",
+                                    "label": ""
+                                },
+                                "type": "plugin",
+                                "name": "Download Artifacts",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "for i in *.sql\r\ndo\r\n    echo \"file name $i\"\r\n    mysql -uroot -pneueda < $i\r\ndone",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "type": "plugin",
+                                "name": "Shell",
+                                "children": []
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "tradeappProcess",
+                    "description": "",
+                    "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                    "takesVersion": true,
+                    "inventoryActionType": "ADD",
+                    "status": "Active",
+                    "configActionType": "ADD",
+                    "active": true,
+                    "path": "components\/44042f8d-1737-4db5-9db1-a089465972d0\/processes\/995147c8-ee48-45c1-936b-7c9ce6b53184",
+                    "deleted": false,
+                    "propDefs": [],
+                    "rootActivity": {
+                        "edges": [
+                            {
+                                "to": "Download Artifacts",
+                                "from": "Versions",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Extract tar file",
+                                "from": "Download Artifacts",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Clean Workspace",
+                                "from": "remove",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "a8737fa5e8b3d64d35d4dd88919f9c",
+                                "from": "Check",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Versions",
+                                "from": "Clean Workspace",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Deploy artifacts",
+                                "from": "Extract tar file",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "remove",
+                                "type": "ALWAYS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Check",
+                                "from": "Shell",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Shell",
+                                "from": "Deploy artifacts",
+                                "type": "SUCCESS",
+                                "value": ""
+                            }
+                        ],
+                        "offsets": [
+                            {
+                                "name": "Extract tar file",
+                                "x": -805,
+                                "y": 540,
+                                "h": 80,
+                                "w": 260
+                            },
+                            {
+                                "name": "remove",
+                                "x": -183.42105263157873,
+                                "y": 96.31578947368422,
+                                "h": 80,
+                                "w": 180
+                            },
+                            {
+                                "name": "a8737fa5e8b3d64d35d4dd88919f9c",
+                                "x": -1755,
+                                "y": 870,
+                                "h": 80,
+                                "w": 130
+                            },
+                            {
+                                "name": "Clean Workspace",
+                                "x": -410,
+                                "y": 210,
+                                "h": 80,
+                                "w": 370
+                            },
+                            {
+                                "name": "Check",
+                                "x": -1525,
+                                "y": 749.8596491228069,
+                                "h": 80,
+                                "w": 180
+                            },
+                            {
+                                "name": "Deploy artifacts",
+                                "x": -975,
+                                "y": 680,
+                                "h": 80,
+                                "w": 270
+                            },
+                            {
+                                "name": "Download Artifacts",
+                                "x": -915,
+                                "y": 410,
+                                "h": 80,
+                                "w": 300
+                            },
+                            {
+                                "name": "Versions",
+                                "x": -595,
+                                "y": 300,
+                                "h": 80,
+                                "w": 300
+                            },
+                            {
+                                "name": "Shell",
+                                "x": -1335,
+                                "y": 720,
+                                "h": 80,
+                                "w": 180
+                            }
+                        ],
+                        "layoutMode": "manual",
+                        "type": "graph",
+                        "name": "71b8f2a5-553d-4ecf-9275-643f146430fd",
+                        "children": [
+                            {
+                                "type": "finish",
+                                "name": "a8737fa5e8b3d64d35d4dd88919f9c",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 60,
+                                "commandName": "Delete Files and Directories",
+                                "pluginName": "File Utils",
+                                "properties": {
+                                    "baseDir": ".",
+                                    "includes": "*",
+                                    "excludes": "",
+                                    "followSymlinks": "false",
+                                    "caseSensitive": "true"
+                                },
+                                "type": "plugin",
+                                "name": "Clean Workspace",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 28,
+                                "commandName": "Download Artifacts",
+                                "pluginName": "IBM UrbanCode Deploy Versioned File Storage",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "artifactSetBaseDir": "",
+                                    "fileIncludePatterns": "**\/*",
+                                    "fileExcludePatterns": "",
+                                    "syncMode": "true",
+                                    "fullVerification": "true",
+                                    "setFileExecuteBits": "false",
+                                    "verifyFileIntegrity": "false",
+                                    "versionId": "${p:version.id}",
+                                    "serverUrl": "${p:server.url}",
+                                    "compId": "${p:component.id}",
+                                    "resId": "${p:resource.id}",
+                                    "charset": "",
+                                    "label": ""
+                                },
+                                "type": "plugin",
+                                "name": "Download Artifacts",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 60,
+                                "commandName": "Move Directory",
+                                "pluginName": "File Utils",
+                                "properties": {
+                                    "sourceDir": ".",
+                                    "destDir": "\/opt\/tradeapp\/${p:version.name}\/",
+                                    "includes": "**\/*",
+                                    "excludes": "",
+                                    "mapperRules": ""
+                                },
+                                "type": "plugin",
+                                "name": "Deploy artifacts",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 60,
+                                "commandName": "Create Directories",
+                                "pluginName": "File Utils",
+                                "properties": {"dir": "\/opt\/tradeapp\/${p:version.name}\/\n"},
+                                "type": "plugin",
+                                "name": "Versions",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "ln -s \/opt\/tradeapp\/${p:version.name} \/opt\/tradeapp\/latest\nchmod a+x  \/opt\/tradeapp\/latest\/bin\/injector.sh\nchmod a+x  \/opt\/tradeapp\/latest\/bin\/server.sh\nservice TradeappSS start",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "type": "plugin",
+                                "name": "Shell",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "rm -f \/opt\/tradeapp\/latest",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "type": "plugin",
+                                "name": "remove",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "sleep 20\nif curl -s http:\/\/localhost:8080\/trades\/stats | grep \"totalTrades\"\nthen\n    echo \"all good\"\nelse\n    exit 1\nfi",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "type": "plugin",
+                                "name": "Check",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 60,
+                                "commandName": "Untar Tarball",
+                                "pluginName": "File Utils",
+                                "properties": {
+                                    "dir": ".",
+                                    "tarball": "*.tar",
+                                    "compression": "none",
+                                    "overwrite": "false"
+                                },
+                                "type": "plugin",
+                                "name": "Extract tar file",
+                                "children": []
+                            }
+                        ]
+                    }
+                }
+            ],
+            "configTemplates": [],
+            "genericProcesses": [],
+            "teamMappings": [],
+            "tags": []
+        },
+        {
+            "name": "TradeappSS",
+            "description": "",
+            "created": 1505226719524,
+            "componentType": "STANDARD",
+            "ignoreQualifiers": 0,
+            "importAutomatically": true,
+            "useVfs": true,
+            "active": true,
+            "deleted": false,
+            "defaultVersionType": "FULL",
+            "cleanupDaysToKeep": 0,
+            "cleanupCountToKeep": 0,
+            "sourceConfigPluginName": "TeamCity",
+            "envPropDefs": [],
+            "resPropDefs": [],
+            "versionPropDefs": [],
+            "propSheetGroup": {"propSheets": [
+                {
+                    "name": "TeamCityComponentProperties",
+                    "properties": [
+                        {
+                            "name": "buildType",
+                            "value": "Support_TradeappSs",
+                            "description": "",
+                            "secure": false
+                        },
+                        {
+                            "name": "extensions",
+                            "description": "",
+                            "secure": false
+                        },
+                        {
+                            "name": "password",
+                            "value": "",
+                            "description": "",
+                            "secure": true
+                        },
+                        {
+                            "name": "repoUrl",
+                            "value": "http:\/\/172.31.41.123:8080",
+                            "description": "",
+                            "secure": false
+                        },
+                        {
+                            "name": "saveFileExecuteBits",
+                            "value": "false",
+                            "description": "",
+                            "secure": false
+                        },
+                        {
+                            "name": "user",
+                            "value": "Support_Team_2",
+                            "description": "",
+                            "secure": false
+                        }
+                    ]
+                },
+                {
+                    "name": "template",
+                    "properties": []
+                },
+                {
+                    "name": "custom",
+                    "properties": []
+                }
+            ]},
+            "processes": [{
+                "name": "tradeappSS",
+                "description": "",
+                "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                "takesVersion": true,
+                "inventoryActionType": "ADD",
+                "status": "Active",
+                "configActionType": "ADD",
+                "active": true,
+                "path": "components\/6589d1f4-3b23-493d-9432-c7785afe2a97\/processes\/4482184c-20b5-4e00-86ae-6357c36044a8",
+                "deleted": false,
+                "propDefs": [],
+                "rootActivity": {
+                    "edges": [
+                        {
+                            "to": "Move Directory",
+                            "from": "Download Artifacts",
+                            "type": "SUCCESS",
+                            "value": ""
+                        },
+                        {
+                            "to": "ee76a90978c512b8325496a5c461cd",
+                            "from": "check",
+                            "type": "SUCCESS",
+                            "value": ""
+                        },
+                        {
+                            "to": "check",
+                            "from": "Move Directory",
+                            "type": "SUCCESS",
+                            "value": ""
+                        },
+                        {
+                            "to": "Download Artifacts",
+                            "from": "Delete Files and Directories",
+                            "type": "SUCCESS",
+                            "value": ""
+                        },
+                        {
+                            "to": "Delete Files and Directories",
+                            "type": "ALWAYS",
+                            "value": ""
+                        }
+                    ],
+                    "offsets": [
+                        {
+                            "name": "Download Artifacts",
+                            "x": -500,
+                            "y": 190,
+                            "h": 80,
+                            "w": 300
+                        },
+                        {
+                            "name": "Move Directory",
+                            "x": -710,
+                            "y": 300,
+                            "h": 80,
+                            "w": 270
+                        },
+                        {
+                            "name": "Delete Files and Directories",
+                            "x": -270,
+                            "y": 100,
+                            "h": 80,
+                            "w": 370
+                        },
+                        {
+                            "name": "ee76a90978c512b8325496a5c461cd",
+                            "x": -1060,
+                            "y": 540,
+                            "h": 80,
+                            "w": 130
+                        },
+                        {
+                            "name": "check",
+                            "x": -810,
+                            "y": 410,
+                            "h": 80,
+                            "w": 180
+                        }
+                    ],
+                    "layoutMode": "manual",
+                    "type": "graph",
+                    "name": "03474d44-8310-44cc-927b-877413eb29d7",
+                    "children": [
+                        {
+                            "type": "finish",
+                            "name": "ee76a90978c512b8325496a5c461cd",
+                            "children": []
+                        },
+                        {
+                            "allowFailure": false,
+                            "useImpersonation": false,
+                            "showHidden": false,
+                            "impersonationUseSudo": false,
+                            "pluginVersion": 60,
+                            "commandName": "Delete Files and Directories",
+                            "pluginName": "File Utils",
+                            "properties": {
+                                "baseDir": ".",
+                                "includes": "*",
+                                "excludes": "",
+                                "followSymlinks": "false",
+                                "caseSensitive": "true"
+                            },
+                            "type": "plugin",
+                            "name": "Delete Files and Directories",
+                            "children": []
+                        },
+                        {
+                            "allowFailure": false,
+                            "useImpersonation": false,
+                            "showHidden": false,
+                            "impersonationUseSudo": false,
+                            "pluginVersion": 28,
+                            "commandName": "Download Artifacts",
+                            "pluginName": "IBM UrbanCode Deploy Versioned File Storage",
+                            "properties": {
+                                "directoryOffset": ".",
+                                "artifactSetBaseDir": "",
+                                "fileIncludePatterns": "**\/*",
+                                "fileExcludePatterns": "",
+                                "syncMode": "true",
+                                "fullVerification": "true",
+                                "setFileExecuteBits": "false",
+                                "verifyFileIntegrity": "false",
+                                "versionId": "${p:version.id}",
+                                "serverUrl": "${p:server.url}",
+                                "compId": "${p:component.id}",
+                                "resId": "${p:resource.id}",
+                                "charset": "",
+                                "label": ""
+                            },
+                            "type": "plugin",
+                            "name": "Download Artifacts",
+                            "children": []
+                        },
+                        {
+                            "allowFailure": false,
+                            "useImpersonation": false,
+                            "showHidden": false,
+                            "impersonationUseSudo": false,
+                            "pluginVersion": 60,
+                            "commandName": "Move Directory",
+                            "pluginName": "File Utils",
+                            "properties": {
+                                "sourceDir": ".",
+                                "destDir": "\/etc\/init.d\/",
+                                "includes": "*",
+                                "excludes": "",
+                                "mapperRules": ""
+                            },
+                            "type": "plugin",
+                            "name": "Move Directory",
+                            "children": []
+                        },
+                        {
+                            "allowFailure": false,
+                            "useImpersonation": false,
+                            "showHidden": false,
+                            "impersonationUseSudo": false,
+                            "pluginVersion": 9,
+                            "commandName": "Shell",
+                            "pluginName": "Shell",
+                            "properties": {
+                                "directoryOffset": ".",
+                                "shellInterpreter": "",
+                                "scriptBody": "chmod a+x \/etc\/init.d\/TradeappSS\nchkconfig --add TradeappSS",
+                                "runAsDaemon": "false",
+                                "outputFile": ""
+                            },
+                            "type": "plugin",
+                            "name": "check",
+                            "children": []
+                        }
+                    ]
+                }
+            }],
+            "configTemplates": [],
+            "genericProcesses": [],
+            "teamMappings": [],
+            "tags": []
+        }
+    ],
+    "environments": [{
+        "name": "tradeappDeploy",
+        "description": "",
+        "color": "#00B2EF",
+        "requireApprovals": false,
+        "noSelfApprovals": false,
+        "exemptProcesses": [],
+        "lockSnapshots": false,
+        "cleanupDaysToKeep": 0,
+        "cleanupCountToKeep": 0,
+        "enableProcessHistoryCleanup": true,
+        "useSystemDefaultDays": true,
+        "historyCleanupDaysToKeep": 365,
+        "order": 1,
+        "active": true,
+        "propSheet": {"properties": []},
+        "templatePropSheet": {
+            "name": "template",
+            "properties": []
+        },
+        "baseResources": [{
+            "path": "\/Supportteam2",
+            "id": "cb2f3974-99fe-4944-ba45-a8312416c211"
+        }],
+        "componentPropSheets": [
+            {
+                "properties": [],
+                "componentName": "SupportTeam2"
+            },
+            {
+                "properties": [],
+                "componentName": "TradeappSS"
+            }
+        ],
+        "versionConditions": [],
+        "teamMappings": []
+    }],
+    "statuses": [],
+    "processes": [
+        {
+            "name": "updateDB",
+            "description": "",
+            "inventoryManagementType": "AUTOMATIC",
+            "offlineAgentHandling": "PRE_EXECUTION_CHECK",
+            "rootActivity": {
+                "edges": [
+                    {
+                        "to": "a2f3b7a00e2ce5fce099521e57ad62",
+                        "type": "ALWAYS",
+                        "value": ""
+                    },
+                    {
+                        "to": "58fb34652cb535c28b3a3983948ff2",
+                        "from": "a2f3b7a00e2ce5fce099521e57ad62",
+                        "type": "SUCCESS",
+                        "value": ""
+                    }
+                ],
+                "offsets": [
+                    {
+                        "name": "58fb34652cb535c28b3a3983948ff2",
+                        "x": -5,
+                        "y": 420,
+                        "h": 80,
+                        "w": 120
+                    },
+                    {
+                        "name": "a2f3b7a00e2ce5fce099521e57ad62",
+                        "x": -65.00000000000006,
+                        "y": 190.64516129032256,
+                        "h": 80,
+                        "w": 240
+                    }
+                ],
+                "layoutMode": "manual",
+                "type": "graph",
+                "name": "83798c71-1966-45cc-a102-4b2d70f537f5",
+                "children": [
+                    {
+                        "type": "finish",
+                        "name": "58fb34652cb535c28b3a3983948ff2",
+                        "children": []
+                    },
+                    {
+                        "componentName": "SupportTeam2",
+                        "properties": [
+                            {
+                                "name": "maxIteration",
+                                "value": "-1"
+                            },
+                            {
+                                "name": "failFast",
+                                "value": "false"
+                            }
+                        ],
+                        "type": "componentEnvironmentIterator",
+                        "name": "a2f3b7a00e2ce5fce099521e57ad62",
+                        "children": [{
+                            "componentName": "SupportTeam2",
+                            "status": "Active",
+                            "type": "inventoryVersionDiff",
+                            "name": "e8b900a7-acc6-4b34-b301-c804a6525cfe",
+                            "children": [{
+                                "componentProcessName": "UpdateDB",
+                                "componentName": "SupportTeam2",
+                                "allowFailure": false,
+                                "properties": {},
+                                "type": "componentProcess",
+                                "name": "UpdateDB",
+                                "children": []
+                            }]
+                        }]
+                    }
+                ]
+            },
+            "propDefs": [],
+            "versionPresets": []
+        },
+        {
+            "name": "CreateDB",
+            "description": "",
+            "inventoryManagementType": "AUTOMATIC",
+            "offlineAgentHandling": "PRE_EXECUTION_CHECK",
+            "rootActivity": {
+                "edges": [
+                    {
+                        "to": "110d9e1f84f4c5e3676817e47e1780",
+                        "type": "ALWAYS",
+                        "value": ""
+                    },
+                    {
+                        "to": "efb67aef115242dfe2139431615d7b",
+                        "from": "110d9e1f84f4c5e3676817e47e1780",
+                        "type": "SUCCESS",
+                        "value": ""
+                    }
+                ],
+                "offsets": [
+                    {
+                        "name": "110d9e1f84f4c5e3676817e47e1780",
+                        "x": -285.75,
+                        "y": 152.75,
+                        "h": 80,
+                        "w": 240
+                    },
+                    {
+                        "name": "efb67aef115242dfe2139431615d7b",
+                        "x": -430,
+                        "y": 350,
+                        "h": 80,
+                        "w": 120
+                    }
+                ],
+                "layoutMode": "manual",
+                "type": "graph",
+                "name": "548c97cd-fb92-4ce4-ba0d-0f34e6352a02",
+                "children": [
+                    {
+                        "type": "finish",
+                        "name": "efb67aef115242dfe2139431615d7b",
+                        "children": []
+                    },
+                    {
+                        "componentName": "SupportTeam2",
+                        "properties": [
+                            {
+                                "name": "maxIteration",
+                                "value": "-1"
+                            },
+                            {
+                                "name": "failFast",
+                                "value": "false"
+                            }
+                        ],
+                        "type": "componentEnvironmentIterator",
+                        "name": "110d9e1f84f4c5e3676817e47e1780",
+                        "children": [{
+                            "componentName": "SupportTeam2",
+                            "status": "Active",
+                            "type": "inventoryVersionDiff",
+                            "name": "04c8e44d-3f00-424a-a505-280889a69ed8",
+                            "children": [{
+                                "componentProcessName": "CreateDB",
+                                "componentName": "SupportTeam2",
+                                "allowFailure": false,
+                                "properties": {},
+                                "type": "componentProcess",
+                                "name": "CreateDB",
+                                "children": []
+                            }]
+                        }]
+                    }
+                ]
+            },
+            "propDefs": [],
+            "versionPresets": []
+        },
+        {
+            "name": "tradeapp Process",
+            "description": "",
+            "inventoryManagementType": "AUTOMATIC",
+            "offlineAgentHandling": "PRE_EXECUTION_CHECK",
+            "rootActivity": {
+                "edges": [
+                    {
+                        "to": "bd8869b02098eacd6cc319bd286add",
+                        "from": "bae095851216bd43db5a1089ca4082",
+                        "type": "SUCCESS",
+                        "value": ""
+                    },
+                    {
+                        "to": "ef03e5c1d199afad896247e07534dc",
+                        "from": "41abc7d8c3a11eb67a19c9baa8e234",
+                        "type": "SUCCESS",
+                        "value": ""
+                    },
+                    {
+                        "to": "ef03e5c1d199afad896247e07534dc",
+                        "from": "69762f5858494f3a0fc58296dc1858",
+                        "type": "SUCCESS",
+                        "value": ""
+                    },
+                    {
+                        "to": "bd8869b02098eacd6cc319bd286add",
+                        "from": "ef03e5c1d199afad896247e07534dc",
+                        "type": "SUCCESS",
+                        "value": ""
+                    },
+                    {
+                        "to": "69762f5858494f3a0fc58296dc1858",
+                        "from": "41abc7d8c3a11eb67a19c9baa8e234",
+                        "type": "FAILURE",
+                        "value": ""
+                    },
+                    {
+                        "to": "41abc7d8c3a11eb67a19c9baa8e234",
+                        "type": "ALWAYS",
+                        "value": ""
+                    },
+                    {
+                        "to": "bae095851216bd43db5a1089ca4082",
+                        "from": "ef03e5c1d199afad896247e07534dc",
+                        "type": "FAILURE",
+                        "value": ""
+                    }
+                ],
+                "offsets": [
+                    {
+                        "name": "bae095851216bd43db5a1089ca4082",
+                        "x": 8,
+                        "y": 440,
+                        "h": 70,
+                        "w": 260
+                    },
+                    {
+                        "name": "bd8869b02098eacd6cc319bd286add",
+                        "x": -662,
+                        "y": 500,
+                        "h": 80,
+                        "w": 120
+                    },
+                    {
+                        "name": "ef03e5c1d199afad896247e07534dc",
+                        "x": -427,
+                        "y": 260,
+                        "h": 80,
+                        "w": 260
+                    },
+                    {
+                        "name": "41abc7d8c3a11eb67a19c9baa8e234",
+                        "x": -271.99999999999994,
+                        "y": 127.08791208791209,
+                        "h": 70,
+                        "w": 230
+                    },
+                    {
+                        "name": "69762f5858494f3a0fc58296dc1858",
+                        "x": 68,
+                        "y": 247.77777777777777,
+                        "h": 70,
+                        "w": 250
+                    }
+                ],
+                "layoutMode": "manual",
+                "type": "graph",
+                "name": "9ad6b3a9-58f9-4ae3-8697-e44e9202e30a",
+                "children": [
+                    {
+                        "type": "finish",
+                        "name": "bd8869b02098eacd6cc319bd286add",
+                        "children": []
+                    },
+                    {
+                        "componentName": "SupportTeam2",
+                        "properties": [
+                            {
+                                "name": "maxIteration",
+                                "value": "-1"
+                            },
+                            {
+                                "name": "runOnlyOnFirst",
+                                "value": "false"
+                            },
+                            {
+                                "name": "failFast",
+                                "value": "false"
+                            }
+                        ],
+                        "type": "componentEnvironmentIterator",
+                        "name": "ef03e5c1d199afad896247e07534dc",
+                        "children": [{
+                            "componentName": "SupportTeam2",
+                            "status": "Active",
+                            "type": "inventoryVersionDiff",
+                            "name": "f69cafd9-03a9-492d-a7d6-2d384ad6810d",
+                            "children": [{
+                                "componentProcessName": "tradeappProcess",
+                                "componentName": "SupportTeam2",
+                                "allowFailure": false,
+                                "properties": {},
+                                "type": "componentProcess",
+                                "name": "deploy tradeapp",
+                                "children": []
+                            }]
+                        }]
+                    },
+                    {
+                        "componentName": "TradeappSS",
+                        "tag": {
+                            "objectType": "Resource",
+                            "name": "red",
+                            "description": "",
+                            "color": "#D9182D"
+                        },
+                        "properties": [
+                            {
+                                "name": "maxIteration",
+                                "value": "-1"
+                            },
+                            {
+                                "name": "runOnlyOnFirst",
+                                "value": "false"
+                            },
+                            {
+                                "name": "failFast",
+                                "value": "false"
+                            }
+                        ],
+                        "type": "componentEnvironmentIterator",
+                        "name": "41abc7d8c3a11eb67a19c9baa8e234",
+                        "children": [{
+                            "componentName": "TradeappSS",
+                            "status": "Active",
+                            "type": "inventoryVersionDiff",
+                            "name": "25a92b8d-a0bb-4b32-af91-9f500b8b800a",
+                            "children": [{
+                                "componentProcessName": "tradeappSS",
+                                "componentName": "TradeappSS",
+                                "allowFailure": false,
+                                "properties": {},
+                                "type": "componentProcess",
+                                "name": "Install: \"TradeappSS\"",
+                                "children": []
+                            }]
+                        }]
+                    },
+                    {
+                        "componentName": "SupportTeam2",
+                        "properties": [
+                            {
+                                "name": "maxIteration",
+                                "value": "-1"
+                            },
+                            {
+                                "name": "runOnlyOnFirst",
+                                "value": "false"
+                            },
+                            {
+                                "name": "failFast",
+                                "value": "false"
+                            }
+                        ],
+                        "type": "componentEnvironmentIterator",
+                        "name": "bae095851216bd43db5a1089ca4082",
+                        "children": [{
+                            "componentName": "SupportTeam2",
+                            "component": {
+                                "name": "SupportTeam2",
+                                "description": "",
+                                "created": 1505122350701,
+                                "componentType": "STANDARD",
+                                "ignoreQualifiers": 0,
+                                "importAutomatically": true,
+                                "useVfs": true,
+                                "active": true,
+                                "deleted": false,
+                                "defaultVersionType": "FULL",
+                                "cleanupDaysToKeep": 0,
+                                "cleanupCountToKeep": 0,
+                                "sourceConfigPluginName": "TeamCity",
+                                "envPropDefs": [],
+                                "resPropDefs": [],
+                                "versionPropDefs": [],
+                                "propSheetGroup": {"propSheets": [
+                                    {
+                                        "name": "custom",
+                                        "properties": []
+                                    },
+                                    {
+                                        "name": "template",
+                                        "properties": []
+                                    },
+                                    {
+                                        "name": "TeamCityComponentProperties",
+                                        "properties": [
+                                            {
+                                                "name": "buildType",
+                                                "value": "Support_UDeploy",
+                                                "description": "",
+                                                "secure": false
+                                            },
+                                            {
+                                                "name": "extensions",
+                                                "description": "",
+                                                "secure": false
+                                            },
+                                            {
+                                                "name": "password",
+                                                "value": "",
+                                                "description": "",
+                                                "secure": true
+                                            },
+                                            {
+                                                "name": "repoUrl",
+                                                "value": "http:\/\/172.31.41.123:8080",
+                                                "description": "",
+                                                "secure": false
+                                            },
+                                            {
+                                                "name": "saveFileExecuteBits",
+                                                "value": "false",
+                                                "description": "",
+                                                "secure": false
+                                            },
+                                            {
+                                                "name": "user",
+                                                "value": "Support_Team_2",
+                                                "description": "",
+                                                "secure": false
+                                            }
+                                        ]
+                                    }
+                                ]},
+                                "processes": [
+                                    {
+                                        "name": "CreateDB",
+                                        "description": "",
+                                        "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                                        "takesVersion": true,
+                                        "inventoryActionType": "ADD",
+                                        "status": "Active",
+                                        "configActionType": "ADD",
+                                        "active": true,
+                                        "path": "components\/44042f8d-1737-4db5-9db1-a089465972d0\/processes\/4487dddd-f13e-4365-b7a2-35b809c96587",
+                                        "deleted": false,
+                                        "propDefs": [],
+                                        "rootActivity": {
+                                            "edges": [
+                                                {
+                                                    "to": "1dd43146a997acb644f1042f2bad75",
+                                                    "from": "Shell",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Shell",
+                                                    "from": "Download Artifacts",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Download Artifacts",
+                                                    "from": "Clean WorkSpace",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Clean WorkSpace",
+                                                    "type": "ALWAYS",
+                                                    "value": ""
+                                                }
+                                            ],
+                                            "offsets": [
+                                                {
+                                                    "name": "Clean WorkSpace",
+                                                    "x": -320,
+                                                    "y": 130,
+                                                    "h": 70,
+                                                    "w": 310
+                                                },
+                                                {
+                                                    "name": "Download Artifacts",
+                                                    "x": -555,
+                                                    "y": 236.21951219512198,
+                                                    "h": 70,
+                                                    "w": 260
+                                                },
+                                                {
+                                                    "name": "Shell",
+                                                    "x": -730,
+                                                    "y": 360,
+                                                    "h": 70,
+                                                    "w": 160
+                                                },
+                                                {
+                                                    "name": "1dd43146a997acb644f1042f2bad75",
+                                                    "x": -920,
+                                                    "y": 600,
+                                                    "h": 80,
+                                                    "w": 120
+                                                }
+                                            ],
+                                            "layoutMode": "manual",
+                                            "type": "graph",
+                                            "name": "f15c9150-57ba-40a9-a60e-d625ff0906f0",
+                                            "children": [
+                                                {
+                                                    "type": "finish",
+                                                    "name": "1dd43146a997acb644f1042f2bad75",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 60,
+                                                    "commandName": "Delete Files and Directories",
+                                                    "pluginName": "File Utils",
+                                                    "properties": {
+                                                        "baseDir": ".",
+                                                        "includes": "*",
+                                                        "excludes": "",
+                                                        "followSymlinks": "false",
+                                                        "caseSensitive": "true"
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Clean WorkSpace",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 9,
+                                                    "commandName": "Shell",
+                                                    "pluginName": "Shell",
+                                                    "properties": {
+                                                        "directoryOffset": ".",
+                                                        "shellInterpreter": "",
+                                                        "scriptBody": "mysql -uroot -pneueda < .\/create_db_users.sql\nmysql -utrades_user -ppassword < .\/create_mysql.sql\n",
+                                                        "runAsDaemon": "false",
+                                                        "outputFile": ""
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Shell",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 28,
+                                                    "commandName": "Download Artifacts",
+                                                    "pluginName": "IBM UrbanCode Deploy Versioned File Storage",
+                                                    "properties": {
+                                                        "directoryOffset": ".",
+                                                        "artifactSetBaseDir": "",
+                                                        "fileIncludePatterns": "**\/*",
+                                                        "fileExcludePatterns": "",
+                                                        "syncMode": "true",
+                                                        "fullVerification": "true",
+                                                        "setFileExecuteBits": "false",
+                                                        "verifyFileIntegrity": "false",
+                                                        "versionId": "${p:version.id}",
+                                                        "serverUrl": "${p:server.url}",
+                                                        "compId": "${p:component.id}",
+                                                        "resId": "${p:resource.id}",
+                                                        "charset": "",
+                                                        "label": ""
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Download Artifacts",
+                                                    "children": []
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "UpdateDB",
+                                        "description": "",
+                                        "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                                        "takesVersion": true,
+                                        "inventoryActionType": "ADD",
+                                        "status": "Active",
+                                        "configActionType": "ADD",
+                                        "active": true,
+                                        "path": "components\/44042f8d-1737-4db5-9db1-a089465972d0\/processes\/16d52178-2840-4ea6-99ba-e0f990fc51a9",
+                                        "deleted": false,
+                                        "propDefs": [],
+                                        "rootActivity": {
+                                            "edges": [
+                                                {
+                                                    "to": "Download Artifacts",
+                                                    "from": "Clean Workspace",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Clean Workspace",
+                                                    "type": "ALWAYS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Shell",
+                                                    "from": "Download Artifacts",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "9733e38c10a41bce934031c05b21f8",
+                                                    "from": "Shell",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                }
+                                            ],
+                                            "offsets": [
+                                                {
+                                                    "name": "9733e38c10a41bce934031c05b21f8",
+                                                    "x": -1080,
+                                                    "y": 410,
+                                                    "h": 80,
+                                                    "w": 120
+                                                },
+                                                {
+                                                    "name": "Download Artifacts",
+                                                    "x": -602.0430107526881,
+                                                    "y": 211.6129032258064,
+                                                    "h": 70,
+                                                    "w": 260
+                                                },
+                                                {
+                                                    "name": "Shell",
+                                                    "x": -840,
+                                                    "y": 303.01075268817203,
+                                                    "h": 70,
+                                                    "w": 160
+                                                },
+                                                {
+                                                    "name": "Clean Workspace",
+                                                    "x": -350,
+                                                    "y": 110,
+                                                    "h": 70,
+                                                    "w": 310
+                                                }
+                                            ],
+                                            "layoutMode": "manual",
+                                            "type": "graph",
+                                            "name": "f8d16c83-3fb1-47e4-9a1d-db6b8ae34c01",
+                                            "children": [
+                                                {
+                                                    "type": "finish",
+                                                    "name": "9733e38c10a41bce934031c05b21f8",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 60,
+                                                    "commandName": "Delete Files and Directories",
+                                                    "pluginName": "File Utils",
+                                                    "properties": {
+                                                        "baseDir": ".",
+                                                        "includes": "*",
+                                                        "excludes": "",
+                                                        "followSymlinks": "false",
+                                                        "caseSensitive": "true"
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Clean Workspace",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 28,
+                                                    "commandName": "Download Artifacts",
+                                                    "pluginName": "IBM UrbanCode Deploy Versioned File Storage",
+                                                    "properties": {
+                                                        "directoryOffset": ".",
+                                                        "artifactSetBaseDir": "",
+                                                        "fileIncludePatterns": "src\/data\/sqlUpdate\/*.sql",
+                                                        "fileExcludePatterns": "",
+                                                        "syncMode": "true",
+                                                        "fullVerification": "true",
+                                                        "setFileExecuteBits": "false",
+                                                        "verifyFileIntegrity": "false",
+                                                        "versionId": "${p:version.id}",
+                                                        "serverUrl": "${p:server.url}",
+                                                        "compId": "${p:component.id}",
+                                                        "resId": "${p:resource.id}",
+                                                        "charset": "",
+                                                        "label": ""
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Download Artifacts",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 9,
+                                                    "commandName": "Shell",
+                                                    "pluginName": "Shell",
+                                                    "properties": {
+                                                        "directoryOffset": ".",
+                                                        "shellInterpreter": "",
+                                                        "scriptBody": "for i in *.sql\r\ndo\r\n    echo \"file name $i\"\r\n    mysql -uroot -pneueda < $i\r\ndone",
+                                                        "runAsDaemon": "false",
+                                                        "outputFile": ""
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Shell",
+                                                    "children": []
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "tradeappProcess",
+                                        "description": "",
+                                        "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                                        "takesVersion": true,
+                                        "inventoryActionType": "ADD",
+                                        "status": "Active",
+                                        "configActionType": "ADD",
+                                        "active": true,
+                                        "path": "components\/44042f8d-1737-4db5-9db1-a089465972d0\/processes\/995147c8-ee48-45c1-936b-7c9ce6b53184",
+                                        "deleted": false,
+                                        "propDefs": [],
+                                        "rootActivity": {
+                                            "edges": [
+                                                {
+                                                    "to": "Download Artifacts",
+                                                    "from": "Versions",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Extract tar file",
+                                                    "from": "Download Artifacts",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Clean Workspace",
+                                                    "from": "remove",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "a8737fa5e8b3d64d35d4dd88919f9c",
+                                                    "from": "Check",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Versions",
+                                                    "from": "Clean Workspace",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Deploy artifacts",
+                                                    "from": "Extract tar file",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "remove",
+                                                    "type": "ALWAYS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Check",
+                                                    "from": "Shell",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "to": "Shell",
+                                                    "from": "Deploy artifacts",
+                                                    "type": "SUCCESS",
+                                                    "value": ""
+                                                }
+                                            ],
+                                            "offsets": [
+                                                {
+                                                    "name": "Extract tar file",
+                                                    "x": -805,
+                                                    "y": 540,
+                                                    "h": 80,
+                                                    "w": 260
+                                                },
+                                                {
+                                                    "name": "remove",
+                                                    "x": -183.42105263157873,
+                                                    "y": 96.31578947368422,
+                                                    "h": 80,
+                                                    "w": 180
+                                                },
+                                                {
+                                                    "name": "a8737fa5e8b3d64d35d4dd88919f9c",
+                                                    "x": -1755,
+                                                    "y": 870,
+                                                    "h": 80,
+                                                    "w": 130
+                                                },
+                                                {
+                                                    "name": "Clean Workspace",
+                                                    "x": -410,
+                                                    "y": 210,
+                                                    "h": 80,
+                                                    "w": 370
+                                                },
+                                                {
+                                                    "name": "Check",
+                                                    "x": -1525,
+                                                    "y": 749.8596491228069,
+                                                    "h": 80,
+                                                    "w": 180
+                                                },
+                                                {
+                                                    "name": "Deploy artifacts",
+                                                    "x": -975,
+                                                    "y": 680,
+                                                    "h": 80,
+                                                    "w": 270
+                                                },
+                                                {
+                                                    "name": "Download Artifacts",
+                                                    "x": -915,
+                                                    "y": 410,
+                                                    "h": 80,
+                                                    "w": 300
+                                                },
+                                                {
+                                                    "name": "Versions",
+                                                    "x": -595,
+                                                    "y": 300,
+                                                    "h": 80,
+                                                    "w": 300
+                                                },
+                                                {
+                                                    "name": "Shell",
+                                                    "x": -1335,
+                                                    "y": 720,
+                                                    "h": 80,
+                                                    "w": 180
+                                                }
+                                            ],
+                                            "layoutMode": "manual",
+                                            "type": "graph",
+                                            "name": "71b8f2a5-553d-4ecf-9275-643f146430fd",
+                                            "children": [
+                                                {
+                                                    "type": "finish",
+                                                    "name": "a8737fa5e8b3d64d35d4dd88919f9c",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 60,
+                                                    "commandName": "Delete Files and Directories",
+                                                    "pluginName": "File Utils",
+                                                    "properties": {
+                                                        "baseDir": ".",
+                                                        "includes": "*",
+                                                        "excludes": "",
+                                                        "followSymlinks": "false",
+                                                        "caseSensitive": "true"
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Clean Workspace",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 28,
+                                                    "commandName": "Download Artifacts",
+                                                    "pluginName": "IBM UrbanCode Deploy Versioned File Storage",
+                                                    "properties": {
+                                                        "directoryOffset": ".",
+                                                        "artifactSetBaseDir": "",
+                                                        "fileIncludePatterns": "**\/*",
+                                                        "fileExcludePatterns": "",
+                                                        "syncMode": "true",
+                                                        "fullVerification": "true",
+                                                        "setFileExecuteBits": "false",
+                                                        "verifyFileIntegrity": "false",
+                                                        "versionId": "${p:version.id}",
+                                                        "serverUrl": "${p:server.url}",
+                                                        "compId": "${p:component.id}",
+                                                        "resId": "${p:resource.id}",
+                                                        "charset": "",
+                                                        "label": ""
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Download Artifacts",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 60,
+                                                    "commandName": "Move Directory",
+                                                    "pluginName": "File Utils",
+                                                    "properties": {
+                                                        "sourceDir": ".",
+                                                        "destDir": "\/opt\/tradeapp\/${p:version.name}\/",
+                                                        "includes": "**\/*",
+                                                        "excludes": "",
+                                                        "mapperRules": ""
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Deploy artifacts",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 60,
+                                                    "commandName": "Create Directories",
+                                                    "pluginName": "File Utils",
+                                                    "properties": {"dir": "\/opt\/tradeapp\/${p:version.name}\/\n"},
+                                                    "type": "plugin",
+                                                    "name": "Versions",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 9,
+                                                    "commandName": "Shell",
+                                                    "pluginName": "Shell",
+                                                    "properties": {
+                                                        "directoryOffset": ".",
+                                                        "shellInterpreter": "",
+                                                        "scriptBody": "ln -s \/opt\/tradeapp\/${p:version.name} \/opt\/tradeapp\/latest\nchmod a+x  \/opt\/tradeapp\/latest\/bin\/injector.sh\nchmod a+x  \/opt\/tradeapp\/latest\/bin\/server.sh\nservice TradeappSS start",
+                                                        "runAsDaemon": "false",
+                                                        "outputFile": ""
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Shell",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 9,
+                                                    "commandName": "Shell",
+                                                    "pluginName": "Shell",
+                                                    "properties": {
+                                                        "directoryOffset": ".",
+                                                        "shellInterpreter": "",
+                                                        "scriptBody": "rm -f \/opt\/tradeapp\/latest",
+                                                        "runAsDaemon": "false",
+                                                        "outputFile": ""
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "remove",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 9,
+                                                    "commandName": "Shell",
+                                                    "pluginName": "Shell",
+                                                    "properties": {
+                                                        "directoryOffset": ".",
+                                                        "shellInterpreter": "",
+                                                        "scriptBody": "sleep 20\nif curl -s http:\/\/localhost:8080\/trades\/stats | grep \"totalTrades\"\nthen\n    echo \"all good\"\nelse\n    exit 1\nfi",
+                                                        "runAsDaemon": "false",
+                                                        "outputFile": ""
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Check",
+                                                    "children": []
+                                                },
+                                                {
+                                                    "allowFailure": false,
+                                                    "useImpersonation": false,
+                                                    "showHidden": false,
+                                                    "impersonationUseSudo": false,
+                                                    "pluginVersion": 60,
+                                                    "commandName": "Untar Tarball",
+                                                    "pluginName": "File Utils",
+                                                    "properties": {
+                                                        "dir": ".",
+                                                        "tarball": "*.tar",
+                                                        "compression": "none",
+                                                        "overwrite": "false"
+                                                    },
+                                                    "type": "plugin",
+                                                    "name": "Extract tar file",
+                                                    "children": []
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "configTemplates": [],
+                                "genericProcesses": [],
+                                "teamMappings": [],
+                                "tags": []
+                            },
+                            "status": "Active",
+                            "selectionType": "LAST_DEPLOYED",
+                            "type": "uninstallVersionDiff",
+                            "name": "f98cf533-e368-46fb-adf9-9df158f7654c",
+                            "children": [{
+                                "componentProcessName": "tradeappProcess",
+                                "componentName": "SupportTeam2",
+                                "allowFailure": false,
+                                "properties": {},
+                                "type": "componentProcess",
+                                "name": "Rollback: \"SupportTeam2\"",
+                                "children": []
+                            }]
+                        }]
+                    },
+                    {
+                        "componentName": "TradeappSS",
+                        "properties": [
+                            {
+                                "name": "maxIteration",
+                                "value": "-1"
+                            },
+                            {
+                                "name": "runOnlyOnFirst",
+                                "value": "false"
+                            },
+                            {
+                                "name": "failFast",
+                                "value": "false"
+                            }
+                        ],
+                        "type": "componentEnvironmentIterator",
+                        "name": "69762f5858494f3a0fc58296dc1858",
+                        "children": [{
+                            "componentName": "TradeappSS",
+                            "component": {
+                                "name": "TradeappSS",
+                                "description": "",
+                                "created": 1505226719524,
+                                "componentType": "STANDARD",
+                                "ignoreQualifiers": 0,
+                                "importAutomatically": true,
+                                "useVfs": true,
+                                "active": true,
+                                "deleted": false,
+                                "defaultVersionType": "FULL",
+                                "cleanupDaysToKeep": 0,
+                                "cleanupCountToKeep": 0,
+                                "sourceConfigPluginName": "TeamCity",
+                                "envPropDefs": [],
+                                "resPropDefs": [],
+                                "versionPropDefs": [],
+                                "propSheetGroup": {"propSheets": [
+                                    {
+                                        "name": "TeamCityComponentProperties",
+                                        "properties": [
+                                            {
+                                                "name": "buildType",
+                                                "value": "Support_TradeappSs",
+                                                "description": "",
+                                                "secure": false
+                                            },
+                                            {
+                                                "name": "extensions",
+                                                "description": "",
+                                                "secure": false
+                                            },
+                                            {
+                                                "name": "password",
+                                                "value": "",
+                                                "description": "",
+                                                "secure": true
+                                            },
+                                            {
+                                                "name": "repoUrl",
+                                                "value": "http:\/\/172.31.41.123:8080",
+                                                "description": "",
+                                                "secure": false
+                                            },
+                                            {
+                                                "name": "saveFileExecuteBits",
+                                                "value": "false",
+                                                "description": "",
+                                                "secure": false
+                                            },
+                                            {
+                                                "name": "user",
+                                                "value": "Support_Team_2",
+                                                "description": "",
+                                                "secure": false
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "template",
+                                        "properties": []
+                                    },
+                                    {
+                                        "name": "custom",
+                                        "properties": []
+                                    }
+                                ]},
+                                "processes": [{
+                                    "name": "tradeappSS",
+                                    "description": "",
+                                    "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                                    "takesVersion": true,
+                                    "inventoryActionType": "ADD",
+                                    "status": "Active",
+                                    "configActionType": "ADD",
+                                    "active": true,
+                                    "path": "components\/6589d1f4-3b23-493d-9432-c7785afe2a97\/processes\/4482184c-20b5-4e00-86ae-6357c36044a8",
+                                    "deleted": false,
+                                    "propDefs": [],
+                                    "rootActivity": {
+                                        "edges": [
+                                            {
+                                                "to": "Move Directory",
+                                                "from": "Download Artifacts",
+                                                "type": "SUCCESS",
+                                                "value": ""
+                                            },
+                                            {
+                                                "to": "ee76a90978c512b8325496a5c461cd",
+                                                "from": "check",
+                                                "type": "SUCCESS",
+                                                "value": ""
+                                            },
+                                            {
+                                                "to": "check",
+                                                "from": "Move Directory",
+                                                "type": "SUCCESS",
+                                                "value": ""
+                                            },
+                                            {
+                                                "to": "Download Artifacts",
+                                                "from": "Delete Files and Directories",
+                                                "type": "SUCCESS",
+                                                "value": ""
+                                            },
+                                            {
+                                                "to": "Delete Files and Directories",
+                                                "type": "ALWAYS",
+                                                "value": ""
+                                            }
+                                        ],
+                                        "offsets": [
+                                            {
+                                                "name": "Download Artifacts",
+                                                "x": -500,
+                                                "y": 190,
+                                                "h": 80,
+                                                "w": 300
+                                            },
+                                            {
+                                                "name": "Move Directory",
+                                                "x": -710,
+                                                "y": 300,
+                                                "h": 80,
+                                                "w": 270
+                                            },
+                                            {
+                                                "name": "Delete Files and Directories",
+                                                "x": -270,
+                                                "y": 100,
+                                                "h": 80,
+                                                "w": 370
+                                            },
+                                            {
+                                                "name": "ee76a90978c512b8325496a5c461cd",
+                                                "x": -1060,
+                                                "y": 540,
+                                                "h": 80,
+                                                "w": 130
+                                            },
+                                            {
+                                                "name": "check",
+                                                "x": -810,
+                                                "y": 410,
+                                                "h": 80,
+                                                "w": 180
+                                            }
+                                        ],
+                                        "layoutMode": "manual",
+                                        "type": "graph",
+                                        "name": "03474d44-8310-44cc-927b-877413eb29d7",
+                                        "children": [
+                                            {
+                                                "type": "finish",
+                                                "name": "ee76a90978c512b8325496a5c461cd",
+                                                "children": []
+                                            },
+                                            {
+                                                "allowFailure": false,
+                                                "useImpersonation": false,
+                                                "showHidden": false,
+                                                "impersonationUseSudo": false,
+                                                "pluginVersion": 60,
+                                                "commandName": "Delete Files and Directories",
+                                                "pluginName": "File Utils",
+                                                "properties": {
+                                                    "baseDir": ".",
+                                                    "includes": "*",
+                                                    "excludes": "",
+                                                    "followSymlinks": "false",
+                                                    "caseSensitive": "true"
+                                                },
+                                                "type": "plugin",
+                                                "name": "Delete Files and Directories",
+                                                "children": []
+                                            },
+                                            {
+                                                "allowFailure": false,
+                                                "useImpersonation": false,
+                                                "showHidden": false,
+                                                "impersonationUseSudo": false,
+                                                "pluginVersion": 28,
+                                                "commandName": "Download Artifacts",
+                                                "pluginName": "IBM UrbanCode Deploy Versioned File Storage",
+                                                "properties": {
+                                                    "directoryOffset": ".",
+                                                    "artifactSetBaseDir": "",
+                                                    "fileIncludePatterns": "**\/*",
+                                                    "fileExcludePatterns": "",
+                                                    "syncMode": "true",
+                                                    "fullVerification": "true",
+                                                    "setFileExecuteBits": "false",
+                                                    "verifyFileIntegrity": "false",
+                                                    "versionId": "${p:version.id}",
+                                                    "serverUrl": "${p:server.url}",
+                                                    "compId": "${p:component.id}",
+                                                    "resId": "${p:resource.id}",
+                                                    "charset": "",
+                                                    "label": ""
+                                                },
+                                                "type": "plugin",
+                                                "name": "Download Artifacts",
+                                                "children": []
+                                            },
+                                            {
+                                                "allowFailure": false,
+                                                "useImpersonation": false,
+                                                "showHidden": false,
+                                                "impersonationUseSudo": false,
+                                                "pluginVersion": 60,
+                                                "commandName": "Move Directory",
+                                                "pluginName": "File Utils",
+                                                "properties": {
+                                                    "sourceDir": ".",
+                                                    "destDir": "\/etc\/init.d\/",
+                                                    "includes": "*",
+                                                    "excludes": "",
+                                                    "mapperRules": ""
+                                                },
+                                                "type": "plugin",
+                                                "name": "Move Directory",
+                                                "children": []
+                                            },
+                                            {
+                                                "allowFailure": false,
+                                                "useImpersonation": false,
+                                                "showHidden": false,
+                                                "impersonationUseSudo": false,
+                                                "pluginVersion": 9,
+                                                "commandName": "Shell",
+                                                "pluginName": "Shell",
+                                                "properties": {
+                                                    "directoryOffset": ".",
+                                                    "shellInterpreter": "",
+                                                    "scriptBody": "chmod a+x \/etc\/init.d\/TradeappSS\nchkconfig --add TradeappSS",
+                                                    "runAsDaemon": "false",
+                                                    "outputFile": ""
+                                                },
+                                                "type": "plugin",
+                                                "name": "check",
+                                                "children": []
+                                            }
+                                        ]
+                                    }
+                                }],
+                                "configTemplates": [],
+                                "genericProcesses": [],
+                                "teamMappings": [],
+                                "tags": []
+                            },
+                            "status": "Active",
+                            "selectionType": "LAST_DEPLOYED",
+                            "type": "uninstallVersionDiff",
+                            "name": "36dc1d65-e25b-4ed5-86f3-4ab986ca0e97",
+                            "children": [{
+                                "componentProcessName": "tradeappSS",
+                                "componentName": "TradeappSS",
+                                "allowFailure": false,
+                                "properties": {},
+                                "type": "componentProcess",
+                                "name": "Rollback: \"TradeappSS\"",
+                                "children": []
+                            }]
+                        }]
+                    }
+                ]
+            },
+            "propDefs": [],
+            "versionPresets": []
+        }
+    ],
+    "genericProcesses": [],
+    "teamMappings": [],
+    "tags": []
+}]

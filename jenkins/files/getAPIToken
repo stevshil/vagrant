@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -sk -u admin:secret http://${jenkinsURL}/user/admin/configure | grep -o 'apiToken.*</td>' | egrep -o 'value="[0-9A-Za-z]{1,}"' | awk -F= '{print $2}' | sed 's/"//g'

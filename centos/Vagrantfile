@@ -1,0 +1,27 @@
+#Vagrant::Config.run do | config |
+Vagrant.configure(2) do | config |
+  config.vm.define :cos74 do | cos74 |
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = 1024
+      #vb.cpus = 1
+      vb.name = "cos74"
+      vb.gui = true
+    end
+    cos74.vm.host_name = "cos74"
+    cos74.vm.provision :shell, :path => 'bin/base.sh'
+  end
+
+  config.vm.define :cos69 do | cos69 |
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = 1024
+      #vb.cpus = 1
+      vb.name = "cos69"
+      vb.gui = true
+    end
+    cos69.vm.host_name = "cos69"
+    cos69.vm.provision :shell, :path => 'bin/base.sh'
+    cos69.vm.box = "bento/centos-6.9"
+  end
+
+  config.vm.box = "bento/centos-7.4"
+end

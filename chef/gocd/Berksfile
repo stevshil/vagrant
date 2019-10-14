@@ -1,0 +1,6 @@
+source "https://supermarket.chef.io"
+
+metadata
+
+cookbook 'gocd', git: "https://github.com/gocd-contrib/go-cookbook.git"
+cookbook 'nodejs', '~> 2.4.2'
