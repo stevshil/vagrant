@@ -9,3 +9,4 @@ cp -f /vagrant/files/var_named/* /var/named/
 cp -f /vagrant/files/etc/resolv.conf /etc/resolv.conf
 
 service named restart
+systemctl enable named

@@ -63,16 +63,16 @@ cat <<_END_ >/etc/docker/daemon.json
 _END_
 systemctl restart docker
 
-# Set appsrv.training.local as the hostname
-if grep appsrv.training.local /etc/hosts >/dev/null 2>&1
+# Set appsrv.tps.local as the hostname
+if grep appsrv.tps.local /etc/hosts >/dev/null 2>&1
 then
 	if ! grep ${IP} /etc/hosts >/dev/null 2>&1
 	then
-		sed -i 's/.*appsrv.training.local.*//' /etc/hosts
-		echo "${IP}	appsrv.training.local" >>/etc/hosts
+		sed -i 's/.*appsrv.tps.local.*//' /etc/hosts
+		echo "${IP}	appsrv.tps.local" >>/etc/hosts
 	fi
 else
-	echo "${IP}	appsrv.training.local" >>/etc/hosts
+	echo "${IP}	appsrv.tps.local" >>/etc/hosts
 fi
 
 # Set DNS to our server

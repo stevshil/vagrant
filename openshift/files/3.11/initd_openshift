@@ -7,7 +7,7 @@ function start {
   writeConfig=$1
   # Check if oc cluster has already been launched
   #PublicIP=$(ifconfig | grep -A3 docker0 | grep inet | awk '{print $2}')
-  PublicIP=appsrv.training.local
+  PublicIP=appsrv.tps.local
   PrivateIP=$(ifconfig | grep -A3 enp0s3 | grep inet | awk '{print $2}')
   export PublicIP PrivateIP
 

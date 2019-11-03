@@ -38,7 +38,7 @@ function start {
   # Check if oc cluster has already been launched
   echo "Setting Hostname/IP Address" 1>&2
   #PublicIP=$(ifconfig | grep -A3 enp0s8 | grep 'inet ' | awk '{print $2}')
-  PublicIP=appsrv.training.local
+  PublicIP=appsrv.tps.local
   PrivateIP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
   export PublicIP PrivateIP
 
