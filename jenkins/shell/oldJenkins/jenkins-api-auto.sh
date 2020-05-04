@@ -16,8 +16,9 @@ fi
 yum -y install java wget
 if [[ ! -d /etc/yum.repos.d/jenkins.repo ]]
 then
-	wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
-	rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+	wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+	rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+	#sed -i '/gpgcheck/d' /etc/yum.repos.d/jenkins.repo
 	yum -y install jenkins
 fi
 #tar xvf /vagrant/files/jenkins-parts.tgz
