@@ -1,0 +1,9 @@
+For version 3.11
+
+Run to create config
+oc cluster up --public-hostname=ec2-34-245-130-173.eu-west-1.compute.amazonaws.com --routing-suffix=ec2-34-245-130-173.eu-west-1.compute.amazonaws.com --base-dir=/openshift --write-config=true --skip-registry-check=true
+
+Run to start
+oc cluster up --public-hostname=ec2-34-245-130-173.eu-west-1.compute.amazonaws.com --routing-suffix=ec2-34-245-130-173.eu-west-1.compute.amazonaws.com --base-dir=/openshift --write-config=false --skip-registry-check=true
+
+It then tries to connect to 127.0.0.1 somewhere

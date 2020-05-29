@@ -2,7 +2,7 @@ Vagrant.configure(2) do | config |
   # Kubernetes Master
   config.vm.define :kubem do | kubem |
     config.vm.provider "virtualbox" do | vb |
-      vb.memory = 2048
+      vb.memory = 8192
       vb.name = "Minikube"
       vb.cpus = 2
     end

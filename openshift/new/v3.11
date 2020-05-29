@@ -1,0 +1,25 @@
+https://github.com/openshift/origin/blob/v4.0.0-alpha.0/docs/cluster_up_down.md
+https://www.techrepublic.com/article/how-to-install-openshift-origin-on-ubuntu-18-04/
+
+
+Need to edit /openshift/openshift-controller-manager/openshift-master.kubeconfig
+and change the;
+	server: https://127.0.0.1:8443/...
+to
+	server: https://publichost:8443/....
+
+
+oc launch commands
+
+Write the config first;
+oc cluster up --public-hostname=ec2-34-242-189-170.eu-west-1.compute.amazonaws.com --base-dir=/openshift --write-config=true --skip-registry-check=true
+
+Do the edit as shown above to change the 127.0.0.1 address
+
+Normal launch after writing config (also after a write);
+oc cluster up --public-hostname=ec2-34-242-189-170.eu-west-1.compute.amazonaws.com --base-dir=/openshift --write-config=false --skip-registry-check=true
+
+To clean up;
+oc cluster down
+docker rm -f `docker ps -a | awk '{print $1}' | tail -n +2`
+rm -rf /openshift

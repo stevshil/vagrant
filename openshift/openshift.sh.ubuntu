@@ -1,7 +1,9 @@
 #!/bin/bash
 
-DNSIP=192.168.10.54
-VERSION=3.7
+# Set DNSIP and VERSION in oc.config
+source /vagrant/oc.config
+
+echo "$SRVNAME" > /srvname
 
 # Install wget
 
@@ -19,11 +21,12 @@ then
 		fi
 
 		tar xvf /vagrant/files/3.7/openshift-origin-client-tools-v3.7.0-7ed6862-linux-64bit.tar.gz
-		mv openshift-origin-client-tools-v3.7.0-7ed6862-linux-64bit/oc /usr/bin/
+		mv openshift-origin-client-tools-v3.7.0-7ed6862-linux-64bit/oc /usr/local/bin/
+		ln -s /usr/local/bin/oc /usr/bin/oc
 
 	else
 
-		if [[ ! -e /vagrant/files/3.7/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz ]]
+		if [[ ! -e /vagrant/files/3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz ]]
 		then
 			wget https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz -O /vagrant/files/3.11/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
 		fi
@@ -46,11 +49,7 @@ chmod 755 /etc/init.d/openshift
 # Set the subnet range for insecure registry
 CIDR=$(ifconfig | grep -A3 eth1 | grep 'inet ' | awk '{print $2}' | awk -F. '{print $1"."$2".0.0/16"}')
 IP=$(ifconfig | grep -A3 eth1 | grep 'inet ' | awk '{print $2}')
-#cat <<_END_ >/etc/docker/daemon.json
-#{
-#	"insecure-registries": ["172.30.0.0/16","127.0.0.0/10","$CIDR"]
-#}
-#_END_
+
 cat <<_END_ >/etc/docker/daemon.json
 {
 	"insecure-registries": ["172.30.0.0/16","127.0.0.0/10","192.168.10.0/24"]
@@ -60,15 +59,15 @@ systemctl enable docker
 systemctl restart docker
 
 # Set appsrv.tps.local as the hostname
-if grep appsrv.tps.local /etc/hosts >/dev/null 2>&1
+if grep $(cat /srvname) /etc/hosts >/dev/null 2>&1
 then
 	if ! grep ${IP} /etc/hosts >/dev/null 2>&1
 	then
-		sed -i 's/.*appsrv.tps.local.*//' /etc/hosts
-		echo "${IP}	appsrv.tps.local" >>/etc/hosts
+		sed -i "s/.*$(cat /srvname).*//" /etc/hosts
+		echo "${IP}	$(cat /srvname)" >>/etc/hosts
 	fi
 else
-	echo "${IP}	appsrv.tps.local" >>/etc/hosts
+	echo "${IP}	$(cat /srvname)" >>/etc/hosts
 fi
 
 # Set DNS to our server

@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.version: 1.7.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: hello
+  name: hello
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: hello
+  strategy:
+    resources: {}
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: hello
+    spec:
+      containers:
+      - image: 'docker.io/openshift/hello-openshift'
+        name: hello
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 512Mi
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.version: 1.7.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: hello
+  name: hello
+spec:
+  ports:
+  - name: "hello8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    io.kompose.service: hello
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: hello
+spec:
+  host: hello.origin.grads.al-labs.co.uk
+  port:
+    targetPort: '8080'
+  to:
+    kind: Service
+    name: hello

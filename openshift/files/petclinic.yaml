@@ -1,0 +1,88 @@
+apiVersion: v1
+---
+kind: DeploymentConfig
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml --provider=openshift
+    kompose.version: 1.7.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: petclinic
+  name: petclinic
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: petclinic
+  strategy:
+    resources: {}
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: petclinic
+    spec:
+      containers:
+      - image: 'petclinic/server:1.0'
+        name: petclinic-server
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /trades/status
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 512Mi
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - petclinic-server
+      from:
+        kind: ImageStreamTag
+        name: petclinic:VERSION
+    type: ImageChange
+status: {}
+---
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml --provider=openshift
+    kompose.version: 1.7.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: petclinic
+  name: petclinic
+spec:
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    io.kompose.service: petclinic
+status:
+  loadBalancer: {}
+---
+kind: Route
+metadata:
+  name: petclinic
+spec:
+  host: petclinic.dev.training.local
+  port:
+    targetPort: '8080'
+  to:
+    kind: Service
+    name: petclinic

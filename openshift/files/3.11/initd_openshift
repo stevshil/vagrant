@@ -3,31 +3,60 @@
 # chkconfig: 35 99 99
 # description: Openshift service control
 
+echo "Detecting NIC"
+if ! ifconfig enp0s3 >/dev/null 2>&1
+then
+  if ifconfig eth0 | grep 10.0.2.15 >/dev/null 2>&1
+  then
+    # This is vagrant so use eth1
+    nicname=eth1
+  else
+    nicname=eth0
+  fi
+else
+  nicname=enp0s3
+fi
+
 function start {
+  echo "Starting OpenShift"
   writeConfig=$1
   # Check if oc cluster has already been launched
   #PublicIP=$(ifconfig | grep -A3 docker0 | grep inet | awk '{print $2}')
-  PublicIP=appsrv.tps.local
-  PrivateIP=$(ifconfig | grep -A3 enp0s3 | grep inet | awk '{print $2}')
+  echo "Detecting external Hostname"
+  PublicIP=$(cat /srvname)
+  PrivateIP=$(ifconfig | grep -A3 ${nicname} | grep inet | awk '{print $2}')
   export PublicIP PrivateIP
 
-  #oc cluster up --public-hostname="$PublicIP" --routing-suffix="${PublicIP}" --host-data-dir=/openshift/data --host-volumes-dir=/openshift/vmvolumes --host-pv-dir=/openshift/pvdir --host-config-dir=/openshift/config
-  oc cluster up --public-hostname="$PublicIP" --routing-suffix="${PublicIP}" --base-dir=/openshift --write-config=${writeConfig}
+  echo "Starting cluster"
+  oc cluster up --public-hostname="$PublicIP" --base-dir=/openshift --write-config=${writeConfig} --skip-registry-check=true
 }
 
 case $1 in
   'clean')
+    echo "Removing old environment"
     oc cluster down
     for x in $(sudo mount | grep openshift | awk '{print $3}')
     do
       sudo umount $x
     done
+    docker rm -f $(docker ps -a | awk '{print $1}' | tail -n +2)
     rm -f /openshift
-    start true
+    echo "Creating new configuration"
+    start "true"
+    # We have to start once
+    echo "Starting initial cluster to get configuration"
+    start "false"
+    echo "Stopping cluster to write external IP for web console"
+    oc cluster down
+    # Change the IP in the
+    echo "Writing the web console IP to configuration"
+    sed -i "s/server: https://127\.0\.0\.1/server: ${PublicIP}/" /openshift/openshift-controller-manager/openshift-master.kubeconfig
+    echo "Starting official system"
+    start "false"
     ;;
 
   'start')
-    start false
+    start "false"
     ;;
 
   'stop')
