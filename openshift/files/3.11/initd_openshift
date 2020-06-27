@@ -40,7 +40,7 @@ case $1 in
       sudo umount $x
     done
     docker rm -f $(docker ps -a | awk '{print $1}' | tail -n +2)
-    rm -f /openshift
+    rm -rf /openshift
     echo "Creating new configuration"
     start "true"
     # We have to start once
