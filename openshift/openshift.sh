@@ -1,1 +1,1 @@
-openshift.sh.ubuntu
+openshift.sh.centos
