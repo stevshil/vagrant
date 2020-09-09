@@ -14,6 +14,9 @@ sed -i '/swap/d' /etc/fstab
 # Set bridge-nf-call-iptables to 1
 sysctl -w net.bridge.bridge-nf-call-iptables=1
 
+# Install software requirements
+yum -y install conntrack-tools
+
 # Download minikube and install
 if [[ ! -f /usr/local/bin/minikube ]]
 then
@@ -31,3 +34,5 @@ then
   #/usr/local/bin/minikube --vm-driver=virtualbox start
   #/usr/local/bin/minikube config set vm-driver virtualbox
 fi
+
+ln -s /var/lib/minikube/binaries/v1.18.3/kubectl /bin/kubectl
