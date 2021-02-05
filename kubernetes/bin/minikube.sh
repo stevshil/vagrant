@@ -35,4 +35,4 @@ then
   #/usr/local/bin/minikube config set vm-driver virtualbox
 fi
 
-ln -s /var/lib/minikube/binaries/v1.18.3/kubectl /bin/kubectl
+ln -s /var/lib/minikube/binaries/v*/kubectl /bin/kubectl
