@@ -32,3 +32,5 @@ kubernetes/token
 **/*.tar.gz
 **/*.tar
 ibmucd/IBM_URBANCODE_DEPLOY_6.2.5_MP_ML_.zip
+**/kubectl
+**/rke

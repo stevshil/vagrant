@@ -1,0 +1,11 @@
+#Vagrant::Config.run do | config |
+Vagrant.configure(2) do | config |
+  config.vm.define :ubuntu20 do | ubu20 |
+    config.vm.provider "virtualbox" do | vb |
+      vb.memory = 1024
+      vb.name = "Ubuntu 20.10"
+    end
+    ubu20.vm.host_name = "ubuntu2010"
+    ubu20.vm.box = "ubuntu/focal64"
+  end
+end
