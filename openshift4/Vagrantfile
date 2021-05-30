@@ -1,0 +1,9 @@
+Vagrant.configure("2") do |config|
+  config.vm.provider "virtualbox" do | v |
+    v.memory = 10240
+    v.cpus = 2
+  end
+  config.vm.box = "bento/centos-7.4"
+  config.vm.provision :shell, :path => 'openshift.sh'
+  config.vm.synced_folder "/Slow/Apps/Linux/OpenShift4", "/srv/openshift4"
+end

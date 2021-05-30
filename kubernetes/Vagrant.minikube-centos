@@ -1,18 +1,20 @@
 Vagrant.configure(2) do | config |
+
   # Kubernetes Master
   config.vm.define :kubem do | kubem |
-    config.vm.provider "virtualbox" do | vb |
+    kubem.vm.provider "virtualbox" do | vb |
       vb.memory = 8192
       vb.name = "Minikube"
       vb.cpus = 2
     end
     kubem.vm.host_name = "minikube.localdomain"
     kubem.vm.network "public_network", bridge: "wlp3s0"
+    kubem.vm.network "private_network", ip: "10.0.0.10"
     kubem.vm.provision :shell, :path => 'bin/minikube.sh'
   end
 
   # Defaults
-  config.vm.box = "bento/centos-7.4"
+  config.vm.box = "mrvantage/centos7-minikube"
   config.ssh.username = "vagrant"
   #config.ssh.password = "vagrant"
 

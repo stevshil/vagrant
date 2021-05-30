@@ -1,11 +1,21 @@
 #Vagrant::Config.run do | config |
 Vagrant.configure(2) do | config |
+  # Ubuntu 20.10
   config.vm.define :ubuntu20 do | ubu20 |
-    config.vm.provider "virtualbox" do | vb |
+    ubu20.vm.provider "virtualbox" do | vb |
       vb.memory = 1024
       vb.name = "Ubuntu 20.10"
     end
     ubu20.vm.host_name = "ubuntu2010"
     ubu20.vm.box = "ubuntu/focal64"
+  end
+
+  config.vm.define :alma8 do | alma8 |
+    alma8.vm.provider "virtualbox" do | vb |
+      vb.memory = 1024
+      vb.name = "Alma (RHEL) 8"
+    end
+    alma8.vm.host_name = "alma8"
+    alma8.vm.box = "almalinux/8"
   end
 end
