@@ -34,3 +34,4 @@ kubernetes/token
 ibmucd/IBM_URBANCODE_DEPLOY_6.2.5_MP_ML_.zip
 **/kubectl
 **/rke
+rkerancherk8sCluster/files/tmp/**
