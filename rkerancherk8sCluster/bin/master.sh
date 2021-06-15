@@ -27,7 +27,7 @@ fi
 
 IP=$(ifconfig | grep -A1 enp0s8 | grep inet | awk '{print $2}')
 
-cp /vagrant/files/fullcluster.yaml /home/vagrant/cluster.yml
+cp /vagrant/files/fullcluster.yml /home/vagrant/cluster.yml
 
 # Install Docker
 apt-get -y update
@@ -101,7 +101,7 @@ _END_
 sudo -u vagrant kubectl --kubeconfig kube_config_cluster.yml apply -f /home/vagrant/user.yml
 
 # Token to use to login to dashboard
-sudo -u vagrant kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get secret $(kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get sa/support -o jsonpath="{.secrets[0].name}")"
+sudo -u vagrant kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get secret $(kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get sa/support -o jsonpath="{.secrets[0].name}")
 
 sudo -u vagrant mkdir /home/vagrant/bin
 echo "kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get secret $(kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get sa/support -o jsonpath=\"{.secrets[0].name}\") -o go-template=\"{{.data.token | base64decode}}\"" >/home/vagrant/bin/getlogin
