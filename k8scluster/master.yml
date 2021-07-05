@@ -1,0 +1,6 @@
+# Install the cluster
+- hosts: k8master
+  become: yes
+  gather_facts: True
+  roles:
+    - master

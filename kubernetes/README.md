@@ -17,3 +17,7 @@ See https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard
 https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 
 https://kubernetes.io/docs/reference/kubectl/docker-cli-to-kubectl/
+
+
+# Kubernetes using kubeadm
+https://devopscube.com/setup-kubernetes-cluster-kubeadm/

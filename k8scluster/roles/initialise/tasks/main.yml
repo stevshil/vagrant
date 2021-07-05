@@ -1,0 +1,62 @@
+# Set up all the systems prior to installation of Kubernetes
+- name: Set Hosts file master
+  lineinfile:
+    path: /etc/hosts
+    regexp: "^{{ item }}"
+    line: "{{ item }}"
+  with_items:
+    - "{{ masterprivip }} master.tps.local master"
+    - "{{ worker1privip }} node1.tps.local node1"
+    - "{{ worker2privip }} node1.tps.local node2"
+
+- name: Disable firewall and apparmor
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+    masked: yes
+  with_items:
+    - ufw
+    - apparmor
+    - systemd-resolved.service
+    - firewalld
+  ignore_errors: yes
+
+- name: Remove /etc/resolv.conf
+  file:
+    name: /etc/resolv.conf
+    state: absent
+
+- name: DNS set up
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    force: yes
+
+- name: Check .ssh exists
+  file:
+    path: "/{{ item.value }}/.ssh"
+    state: directory
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+    mode: 0700
+  with_dict: "{{ sshkeys }}"
+
+- name: Copy ssh keys
+  copy:
+    src: rke_rsa
+    dest: "{{ item.value }}/.ssh/id_rsa"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+    mode: 0600
+  with_dict: "{{ sshkeys }}"
+
+- name: Set Authorized Keys
+  lineinfile:
+    path: "{{ item.key }}/.ssh/authorized_keys"
+    regexp: "{{ item.value }}"
+    line: "{{ item.value }}"
+    create: yes
+  with_dict:
+   /root: "{{ lookup('file','rke_rsa.pub')}}"
+   /home/vagrant: "{{ lookup('file','rke_rsa.pub')}}"

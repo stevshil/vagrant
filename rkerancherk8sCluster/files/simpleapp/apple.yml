@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apple-app
+  labels:
+    app: apple
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: apple
+  template:
+    metadata:
+      labels:
+        app: apple
+    spec:
+      # Enables pods to run on multiple nodes - still not the best method
+      # Need NGINX Ingress to route across nodes
+      #topologySpreadConstraints:
+      #  - maxSkew: 1
+      #    topologyKey: zone
+      #    whenUnsatisfiable: DoNotSchedule
+      containers:
+        - name: apple-app
+          image: hashicorp/http-echo
+          args:
+            - "-text=apple"
+          ports:
+            - containerPort: 5678
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: apple-service
+spec:
+  selector:
+    app: apple
+  ports:
+    - port: 5678 # Default port for image

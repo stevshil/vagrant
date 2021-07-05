@@ -44,7 +44,7 @@ pwd
 # Deploy cluster
 sudo -u vagrant rke up
 
-# Install kubectl 
+# Install kubectl
 if [[ ! -e /vagrant/files/kubectl ]]
 then
 	wget "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" -O /vagrant/files/kubectl
@@ -101,7 +101,7 @@ _END_
 sudo -u vagrant kubectl --kubeconfig kube_config_cluster.yml apply -f /home/vagrant/user.yml
 
 # Token to use to login to dashboard
-sudo -u vagrant kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get secret $(kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get sa/support -o jsonpath="{.secrets[0].name}")"
+sudo -u vagrant kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get secret $(kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get sa/support -o jsonpath="{.secrets[0].name}")
 
 sudo -u vagrant mkdir /home/vagrant/bin
 echo "kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get secret $(kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get sa/support -o jsonpath=\"{.secrets[0].name}\") -o go-template=\"{{.data.token | base64decode}}\"" >/home/vagrant/bin/getlogin

@@ -1,0 +1,33 @@
+homesubnet: 192.168.10
+internalsubnet: 10.0.0
+# kubesprayver: v2.16.0
+kubesprayver: v2.12.0
+pythonversion: 2
+
+masterip: "{{ homesubnet }}.60"
+masterprivip: "{{ internalsubnet }}.10"
+worker1ip: "{{ homesubnet }}.61"
+worker1privip: "{{ internalsubnet }}.11"
+worker2ip: "{{ homesubnet }}.62"
+worker2privip: "{{ internalsubnet }}.12"
+proxyip: "{{ homesubnet }}.65"
+proxyprivip: "{{ internalsubnet }}.15"
+dnsserver: "{{ homesubnet }}.54"
+dnsdomain: tps.local
+
+env: dev
+dnsname: tps.local
+nummasters: 1
+numworkers: 2
+kubectlver: v1.21.0
+bastion: no
+sshkeys:
+  root: /root
+  vagrant: /home/vagrant
+
+ansible_ssh_common_args: "-o StrictHostKeyChecking: no"
+ansible_ssh_user: root
+ansible_become_method: sudo
+ansible_connection: ssh
+ansible_become_user: root
+ansible_become: yes

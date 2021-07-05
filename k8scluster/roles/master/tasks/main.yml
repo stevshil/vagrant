@@ -1,0 +1,51 @@
+- name: Install pip{{ pythonversion }}
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - "python{{ pythonversion }}-pip"
+    - git
+    - "python{{ pythonversion }}-typing"
+    - python-markupsafe
+  ignore_errors: yes
+
+- name: Clone the Kubespray
+  git:
+    repo: https://github.com/kubernetes-sigs/kubespray.git
+    dest: /home/vagrant/kubespray
+    update: no
+    version: "{{ kubesprayver }}"
+
+- name: Add python requirements
+  pip:
+    executable: "pip{{ pythonversion }}"
+    requirements: /home/vagrant/kubespray/requirements.txt
+
+- name: Install kubectl
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{kubectlver}}/bin/linux/amd64/kubectl"
+    dest: /bin/kubectl
+    mode: 755
+    owner: root
+    group: root
+
+- name: Copy the kubespray inventory sample folder
+  copy:
+    remote_src: yes
+    src: /home/vagrant/kubespray/inventory/sample
+    dest: /home/vagrant/kubespray/inventory/mycluster
+
+- name: Copy the kubespray inventory
+  template:
+    src: inventory.ini.j2
+    dest: /home/vagrant/kubespray/inventory/mycluster/inventory.ini
+    owner: vagrant
+    group: vagrant
+    mode: 0644
+
+- name: Create etc_kubernetes directory to prevent kubespray failing
+  file:
+    path: /etc/kubernetes
+    state: directory
+    owner: root
+    group: root

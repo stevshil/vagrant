@@ -1,4 +1,3 @@
-#Vagrant::Config.run do | config |
 Vagrant.configure(2) do | config |
   # Fedora image
   config.vm.define :fedora do | fedora |

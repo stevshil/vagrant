@@ -3,6 +3,7 @@
 nodes:
 # https://rancher.com/docs/rke/latest/en/config-options/nodes
 - address: 192.168.10.60
+  internal_address: 10.0.0.10
   role:
   - controlplane
   - etcd
@@ -14,6 +15,7 @@ nodes:
   labels:
     app: master
 - address: 192.168.10.61
+  internal_address: 10.0.0.11
   role:
   - worker
     #hostname_override: node1.local
@@ -24,6 +26,7 @@ nodes:
     app: worker
     lb: yes
 - address: 192.168.10.62
+  internal_address: 10.0.0.12
   port: "22"
   role:
   - worker
