@@ -6,18 +6,16 @@ NICS=["wlp3s0","enp3s0","wlp54s0","enp53s0"]
 Vagrant.configure(2) do | config |
 
   # Kubernetes UI Controller
-  # config.vm.define :kui do | kui |
-  #   kui.vm.provider "virtualbox" do | vb |
-  #     vb.memory = 2048
-  #     vb.name = "Rancher UI"
-  #     vb.cpus = 1
-  #   end
-  #   kui.vm.host_name = "kui.localdomain"
-  #   kui.vm.network "public_network", bridge: NICS, ip: YOURSUBNET+".63"
-  #   kui.vm.network "private_network", ip: "10.0.0.13"
-  #   kui.vm.provision :shell, :path => 'bin/node.sh'
-  #   kui.vm.provision :shell, :path => 'bin/rancherui-master.sh'
-  # end
+  config.vm.define :rui do | rui |
+    rui.vm.provider "virtualbox" do | vb |
+      vb.memory = 2048
+      vb.name = "rancherui"
+      vb.cpus = 1
+    end
+    rui.vm.host_name = "rui.localdomain"
+    rui.vm.network "public_network", bridge: NICS, ip: YOURSUBNET+".64"
+    rui.vm.provision :shell, :path => 'bin/rancherui.sh'
+  end
 
   # Load balancer external
   config.vm.define :proxy do | proxy |
