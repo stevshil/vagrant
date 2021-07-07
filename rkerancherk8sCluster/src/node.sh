@@ -1,7 +1,6 @@
 #!/bin/bash
 
-vmuser=vagrant
-YOURGW="192.168.10.1"
+. config
 
 if [[ -e /etc/lsb-release ]]
 then
@@ -25,20 +24,12 @@ fi
 
 usermod -aG docker $vmuser
 
-cp -f /vagrant/files/etc_hosts /etc/hosts
-
 systemctl disable --now ufw 2>/dev/null
 systemctl disable --now apparmor 2>/dev/null
 systemctl disable --now firewalld 2>/dev/null
 
 # Kill systemd resolved
 systemctl disable --now systemd-resolved.service
-
-rm -f /etc/resolv.conf
-cp -f /vagrant/files/resolv.conf /etc/resolv.conf
-
-# Set root password
-(sleep 2; echo "secret123"; sleep 2; echo "secret123") | passwd root
 
 if [[ ! -d /home/$vmuser/.ssh ]]
 then
@@ -51,10 +42,10 @@ then
 	mkdir /root/.ssh
 fi
 
-cp /vagrant/files/rke_rsa /home/$vmuser/.ssh/id_rsa
-cp /vagrant/files/rke_rsa /root/.ssh/id_rsa
-cat /vagrant/files/rke_rsa.pub >>/home/$vmuser/.ssh/authorized_keys
-cat /vagrant/files/rke_rsa.pub >> /root/.ssh/authorized_keys
+cp /var/tmp/rke_rsa /home/$vmuser/.ssh/id_rsa
+cp /var/tmp/rke_rsa /root/.ssh/id_rsa
+cat /var/tmp/rke_rsa.pub >>/home/$vmuser/.ssh/authorized_keys
+cat /var/tmp/rke_rsa.pub >> /root/.ssh/authorized_keys
 chown -R $vmuser:$vmuser /home/$vmuser/.ssh
 chmod 600 /home/$vmuser/.ssh/id_rsa*
 
@@ -63,13 +54,4 @@ if [[ ! -d /etc/cni/net.d ]]
 then
 	mkdir -p /etc/cni/net.d
 	touch /etc/cni/net.d/10-flannel.conflist
-fi
-
-if [[ $vmuser == "vagrant" ]]
-then
-	# Finally disable the NAT network so we only have the public, this is only required for vagrant
-	sed -i 's/^ONBOOT.*/ONBOOT=no/' /etc/sysconfig/network-scripts/ifcfg-enp0s3
-	# ifconfig enp0s3 down
-	echo "default via $YOURGW dev enp0s8" >/etc/sysconfig/network
-	init 6 # To get networking sorted
 fi

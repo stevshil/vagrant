@@ -5,43 +5,6 @@ NICS=["wlp3s0","enp3s0","wlp54s0","enp53s0"]
 
 Vagrant.configure(2) do | config |
 
-  # Worker nodes
-  config.vm.define :node1 do | node1 |
-    node1.vm.provider "virtualbox" do | vb |
-      vb.memory = 4096
-      vb.name = "RKE Node1"
-      vb.cpus = 2
-    end
-    node1.vm.host_name = "node1.localdomain"
-    node1.vm.network "public_network", bridge: NICS, ip: YOURSUBNET+".61"
-    node1.vm.provision :shell, :path => 'bin/node.sh'
-  end
-
-  config.vm.define :node2 do | node2 |
-    node2.vm.provider "virtualbox" do | vb |
-      vb.memory = 4096
-      vb.name = "RKE Node2"
-      vb.cpus = 2
-    end
-    node2.vm.host_name = "node2.localdomain"
-    node2.vm.network "public_network", bridge: NICS, ip: YOURSUBNET+".62"
-    node2.vm.provision :shell, :path => 'bin/node.sh'
-  end
-
-  # Kubernetes Master
-  config.vm.define :master do | master |
-    master.vm.provider "virtualbox" do | vb |
-      vb.memory = 4096
-      vb.name = "RKE Master"
-      vb.cpus = 1
-    end
-    master.vm.host_name = "master.localdomain"
-    master.vm.network "public_network", bridge: NICS, ip: YOURSUBNET+".60"
-    master.vm.synced_folder ".", "/vagrant", owner: "vagrant"
-    master.vm.provision :shell, :path => 'bin/node.sh'
-    master.vm.provision :shell, :path => 'bin/rke-master.sh'
-  end
-
   # Kubernetes UI Controller
   # config.vm.define :kui do | kui |
   #   kui.vm.provider "virtualbox" do | vb |

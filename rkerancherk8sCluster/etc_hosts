@@ -1,0 +1,4 @@
+127.0.0.1	localhost
+192.168.10.60 master.localdomain master.tps.local master
+192.168.10.61 node1.localdomain node1.tps.local node1
+192.168.10.62 node2.localdomain node2.tps.local node2

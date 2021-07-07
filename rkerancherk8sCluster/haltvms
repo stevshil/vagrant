@@ -1,0 +1,23 @@
+#!/bin/bash
+
+. src/config
+
+if [ ! -e tmpconfig ]
+then
+  echo "No configuration file called tmpconfig"
+  echo "Cannot stop the machines"
+  exit
+fi
+
+for machine in rkenode1 rkenode2 rkemaster
+do
+  if VBoxManage list runningvms | grep $machine
+  then
+    echo "Shutting down $machine"
+    sshpass -p $VMPASS root@$(grep "^export $machine" tmpconfig | awk -F= '{print $2}') 'init 0'
+  else
+    echo "$machine has already stopped"
+  fi
+done
+
+vagrant halt proxy
