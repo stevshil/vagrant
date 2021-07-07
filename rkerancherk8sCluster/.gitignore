@@ -1,3 +1,4 @@
 files/rke
 files/kubectl
 tmpconfig
+etc_hosts

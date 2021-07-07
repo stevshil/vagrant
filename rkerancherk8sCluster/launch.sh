@@ -27,7 +27,7 @@ fi
 # Grab the box name e.g. packer-almalinux-8-1622130088
 boxname=$(cat ~/.vagrant.d/boxes/almalinux*8/*/virtualbox/box.ovf | grep vbox:Machine | head -1 | sed 's/^.*name="//' | sed 's/" OSType.*//')
 # Launch the Cluster VMs
-for machine in $hostlist
+for machine in $(echo $hostlist | sed 's/ proxy//')
 do
   if ! VBoxManage list vms | grep "$machine"
   then
