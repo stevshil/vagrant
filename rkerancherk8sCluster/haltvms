@@ -6,7 +6,7 @@ if [ ! -e tmpconfig ]
 then
   echo "No configuration file called tmpconfig"
   echo "Cannot stop the machines"
-  exit
+  exit 1
 fi
 
 for machine in rkenode1 rkenode2 rkemaster
