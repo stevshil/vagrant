@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+  generation: 2
+  name: example-ingress
+spec:
+  rules:
+  - host: rd.k8s.tps.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: apple-service
+            port:
+              number: 5678
+        path: /apple
+        pathType: Prefix
+      - backend:
+          service:
+            name: banana-service
+            port:
+              number: 5678
+        path: /banana
+        pathType: Prefix
