@@ -33,7 +33,7 @@ do
   then
     VBoxManage import ~/.vagrant.d/boxes/almalinux*8/*/virtualbox/box.ovf
     VBoxManage modifyvm $boxname --name $machine
-    VBoxManage modifyvm $machine --ioapic on --memory 4096 --vram 16 --nic1 bridged --nictype1 82540EM --cableconnected1 on --bridgeadapter1 $NIC --audio none
+    VBoxManage modifyvm $machine --ioapic on --memory $RAM --vram 16 --nic1 bridged --nictype1 $NICTYPE --cableconnected1 on --bridgeadapter1 $NIC --audio none
     echo "Adding CDROM"
     VBoxManage storageattach $machine --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium "$ISO"
     echo "Changing boot order"
