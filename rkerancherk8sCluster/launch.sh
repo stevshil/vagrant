@@ -5,7 +5,7 @@
 
 # Environment variables to change
 ISO="/home/steve/Downloads/AlmaLinux-8.4/AlmaLinux-8.4-x86_64-minimal.iso"
-NIC=$(ip a | grep -B2 192 | sed 's/^...//' | egrep '^(enp|eth)' | awk '{print $1}' | sed 's/://g')
+NIC=$(ip a | grep -B2 192 | sed 's/^...//' | egrep '^(enp|eth|wlp)' | awk '{print $1}' | sed 's/://g')
 
 if [[ $# > 0 ]]
 then
@@ -20,7 +20,7 @@ fi
 sed -e "s/YOURSUBNET/$YOURSUBNET/g" -e "s/YOURDOMAIN/$YOURDOMAIN/g" src/etc_hosts.tmplt >etc_hosts
 
 # Get the Alma Linux 8 box
-if [[ ! -e ~/.vagrant.d/boxes/almalinux*8/*/virtualbox/box.ovf ]]
+if ! ls ~/.vagrant.d/boxes/almalinux*8/*/virtualbox/box.ovf >/dev/null 2>&1
 then
   vagrant box add almalinux/8 --provider virtualbox
 fi
@@ -33,7 +33,9 @@ do
   then
     VBoxManage import ~/.vagrant.d/boxes/almalinux*8/*/virtualbox/box.ovf
     VBoxManage modifyvm $boxname --name $machine
-    VBoxManage modifyvm $machine --ioapic on --memory $RAM --vram 16 --nic1 bridged --nictype1 $NICTYPE --cableconnected1 on --bridgeadapter1 $NIC --audio none
+    VBoxManage modifyvm $machine --ioapic on --memory $RAM --vram 16 --nic1 bridged --nictype1 $NICTYPE --cableconnected1 on --bridgeadapter1 $NIC
+    # Add internal nic
+    VBoxManage modifyvm $machine --nic2 intnet --intnet1 "Internal Network"
     echo "Adding CDROM"
     VBoxManage storageattach $machine --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium "$ISO"
     echo "Changing boot order"
@@ -91,15 +93,19 @@ do
   # Change VM IP
   case $machine in
     'rkenode1') newIP=${YOURSUBNET}.61
+                intIP=10.0.0.61
                 ;;
     'rkenode2') newIP=${YOURSUBNET}.62
+                intIP=10.0.0.62
                 ;;
     'rkemaster') newIP=${YOURSUBNET}.60
+                 intIP=10.0.0.60
                 ;;
     esac
   echo "Changing VM IP from $IP to $newIP"
   sshpass -p $VMPASS ssh root@$IP "sed -i 's/BOOTPROTO=.*/BOOTPROTO=none/' /etc/sysconfig/network-scripts/ifcfg-enp0s3; echo -e 'IPADDR=${newIP}\nGATEWAY=${YOURGW}' >>/etc/sysconfig/network-scripts/ifcfg-enp0s3"
-
+  # Internal NIC
+  sshpass -p $VMPASS ssh root@$IP "echo -e 'TYPE=Ethernet\nBOOTPROTO=none\nNAME=enp0s8\nDEVICE=enp0s8\nONBOOT=yes\nIPADDR=$intIP' >/etc/sysconfig/network-scripts/ifcfg-enp0s8"
   echo "Rebooting VM"
   sshpass -p $VMPASS ssh root@$IP "init 6"
 
