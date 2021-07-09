@@ -44,6 +44,9 @@ service jenkins stop
 # Empty log to check for running
 >/var/log/jenkins/jenkins.log
 
+sleep 30
+
+service jenkins start
 echo "Waiting for Jenkins"
 until grep "Jenkins is fully up and running" /var/log/jenkins/jenkins.log >/dev/null 2>&1
 do

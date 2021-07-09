@@ -45,48 +45,6 @@ Vagrant.configure(2) do | config |
     python.vm.provision :shell, :path => 'bin/python.sh'
   end
 
-  # Jira basic install
-  config.vm.define :jira do | jira |
-    config.vm.provider "virtualbox" do |vb|
-      vb.memory = 1024
-      #vb.cpus = 1
-      vb.name = "Jira"
-    end
-    jira.vm.host_name = "jira"
-    #jira.vm.box     = "CentOS7.0_x86_64_minimal.box"
-    jira.vm.provision :shell, :path => 'bin/jira.sh'
-    jira.vm.network "forwarded_port", guest: 8080, host: 1080, protocol: 'tcp'
-  end
-
-  # Jenkins basic install, configured with project security
-  # admin/admin = user and password
-  config.vm.define :jenkins do | jenkins |
-    config.vm.provider "virtualbox" do |vb|
-      vb.memory = 1024
-      #vb.cpus = 1
-      vb.name = "JenkinsV"
-    end
-    #jenkins.vm.box     = "CentOS7.0_x86_64_minimal.box"
-    #jenkins.vm.network "private_network", ip: "10.0.10.5", virtualbox__intnet: "NatNetwork"
-    jenkins.vm.network "public_network", bridge: 'em1', ip: "10.0.10.25"
-    jenkins.vm.host_name = "jenkins"
-    #jenkins.vm.provision "shell", inline: "/usr/bin/gunzip -c /vagrant/bin/jenkins.sh.gz | /usr/bin/bash -"
-    jenkins.vm.provision "shell", inline: "/usr/bin/gunzip -c /vagrant/bin/jenkins.sh.gz >/root/jenkins.sh; /usr/bin/sudo /usr/bin/chmod +x /root/jenkins.sh"
-    jenkins.vm.provision "shell", inline: "/usr/bin/sudo /root/jenkins.sh"
-    #jenkins.vm.provision :shell, :path => 'bin/jenkins.sh'
-    jenkins.vm.network "forwarded_port", guest: 8080, host: 2080, protocol: 'tcp'
-  end
-
-  config.vm.define :jjb do | jjb |
-    config.vm.provider "virtualbox" do | vb |
-      vb.memory = 1024
-      vb.name = "Jenkins JBoss"
-    end
-    jjb.vm.host_name = "jenkins"
-    jjb.vm.provision :shell, :path => 'bin/jjb.sh'
-    jjb.vm.network "forwarded_port", guest: 8080, host: 58080, protocol: 'tcp'
-  end
-
   # Geneos ITRS training server
   # NOTE: To reprovision ITRS software without reinstall set environment variable
   # e.g.   export ITRS=yes

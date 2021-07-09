@@ -2,6 +2,8 @@
 
 This project builds a local VM using Vagrant and VirtulBox on you local machine.
 
+Login: admin/admin
+
 ## Mac
 
 If you have a Mac then you can install Vagrant and VirtualBox using Brew;
