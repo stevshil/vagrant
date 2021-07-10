@@ -1,0 +1,19 @@
+# Clean up outdated
+vagrant box prune
+
+VBOXUBU=focal64 # Doesn't works
+VBOXRHEL="almalinux"
+VBOX=$VBOXRHEL
+
+vmuser=vagrant
+YOURGW="192.168.10.1"
+YOURDNS="192.168.10.108"
+YOURSUBNET="192.168.10"
+YOURDOMAIN="tps.local"
+VMPASS=vagrant
+RAM=2048
+NICTYPE=82540EM
+hostlist="k8snode1 k8snode2 k8smaster proxy"
+VBOXPATH="$HOME/.vagrant.d/boxes/$(vagrant box list | grep $VBOX | sed -e 's,/,*,' -e 's/  *.*$//')/*/virtualbox/box.ovf"
+
+export vmuser YOURGW YOURDNS YOURSUBNET YOURDOMAIN VMPASS hostlist VBOX VBOXPATH

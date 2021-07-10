@@ -17,15 +17,16 @@ else
     yum -y install ansible
   fi
 fi
-cd /vagrant
-ansible-playbook -i /vagrant/environments/dev nodes.yml
+
+ansible-playbook -i environments/dev nodes.yml
 
 if hostname | grep master >/dev/null 2>&1
 then
-  ansible-playbook -i /vagrant/environments/dev master.yml
+  ansible-playbook -i environments/dev master.yml
   if [[ -d /home/vagrant/kubespray/inventory/mycluster ]]
   then
-    cd /home/vagrant/kubespray; ansible-playbook -i inventory/mycluster/inventory.ini --become --become-user=root cluster.yml
+    cd /home/vagrant/kubespray; ansible-playbook -i inventory/mycluster/inventory.ini --become --become-user=root cluster.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+
   else
     echo "Your cluster did not create"
   fi

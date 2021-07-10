@@ -1,0 +1,14 @@
+#!/bin/bash
+
+. bin/config
+.
+echo "Select host to log on to:"
+select host in $hostlist
+do
+  if [[ $host == proxy ]]
+  then
+    vagrant ssh proxy
+  else
+    sshpass -p $VMPASS ssh root@$(grep "^export $host" tmpconfig | awk -F= '{print $2}')
+  fi
+done
