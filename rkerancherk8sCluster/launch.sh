@@ -4,7 +4,6 @@
 # Vagrantup can't do it without the NAT network.
 
 # Environment variables to change
-ISO="/home/steve/Downloads/AlmaLinux-8.4/AlmaLinux-8.4-x86_64-minimal.iso"
 NIC=$(ip a | grep -B2 192 | sed 's/^...//' | egrep '^(enp|eth|wlp)' | awk '{print $1}' | sed 's/://g')
 
 if [[ $# > 0 ]]
@@ -36,8 +35,6 @@ do
     VBoxManage modifyvm $machine --ioapic on --memory $RAM --vram 16 --nic1 bridged --nictype1 $NICTYPE --cableconnected1 on --bridgeadapter1 $NIC
     # Add internal nic
     VBoxManage modifyvm $machine --nic2 intnet --intnet1 "Internal Network"
-    echo "Adding CDROM"
-    VBoxManage storageattach $machine --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium "$ISO"
     echo "Changing boot order"
     VBoxManage modifyvm  $machine --boot1 disk --boot2 dvd --boot3 none --boot4 none
   fi
