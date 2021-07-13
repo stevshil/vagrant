@@ -66,26 +66,26 @@ do
 
   # Copy up files for install process
   echo "Copying config"
-  sshpass -p $VMPASS scp src/config root@${IP}:
+  sshpass -p $VMPASS scp $SSHOPTS src/config root@${IP}:
   echo "Copying install script"
-  sshpass -p $VMPASS scp src/node.sh root@${IP}:
+  sshpass -p $VMPASS scp $SSHOPTS src/node.sh root@${IP}:
   echo "Copying ssh keys"
-  sshpass -p $VMPASS scp src/rke_rsa* root@${IP}:/var/tmp
+  sshpass -p $VMPASS scp $SSHOPTS src/rke_rsa* root@${IP}:/var/tmp
   echo "Removing current DNS resolver"
-  sshpass -p $VMPASS ssh root@$IP rm -f /etc/resolv.conf
+  sshpass -p $VMPASS ssh $SSHOPTS root@$IP rm -f /etc/resolv.conf
   echo "Adding new DNS resolver"
   if [[ -n $YOURDNS ]]
   then
     echo "Setting DNS resolver"
-    sshpass -p $VMPASS ssh root@$IP "echo -e 'nameserver $YOURDNS\nsearch $YOURDOMAIN' >/etc/resolv.conf"
-    sshpass -p $VMPASS ssh root@$IP "sed -i '/\[main\]/a\dns=none' /etc/NetworkManager/NetworkManager.conf"
+    sshpass -p $VMPASS ssh $SSHOPTS root@$IP "echo -e 'nameserver $YOURDNS\nsearch $YOURDOMAIN' >/etc/resolv.conf"
+    sshpass -p $VMPASS ssh $SSHOPTS root@$IP "sed -i '/\[main\]/a\dns=none' /etc/NetworkManager/NetworkManager.conf"
   fi
 
   echo "Copying hosts file"
-  sshpass -p $VMPASS scp etc_hosts root@$IP:/etc/hosts
+  sshpass -p $VMPASS scp $SSHOPTS etc_hosts root@$IP:/etc/hosts
 
   echo "Running common script"
-  sshpass -p $VMPASS ssh root@$IP "chmod +x node.sh; ./node.sh"
+  sshpass -p $VMPASS ssh $SSHOPTS root@$IP "chmod +x node.sh; ./node.sh"
 
   # Change VM IP
   case $machine in
@@ -100,11 +100,11 @@ do
                 ;;
     esac
   echo "Changing VM IP from $IP to $newIP"
-  sshpass -p $VMPASS ssh root@$IP "sed -i 's/BOOTPROTO=.*/BOOTPROTO=none/' /etc/sysconfig/network-scripts/ifcfg-enp0s3; echo -e 'IPADDR=${newIP}\nGATEWAY=${YOURGW}' >>/etc/sysconfig/network-scripts/ifcfg-enp0s3"
+  sshpass -p $VMPASS ssh $SSHOPTS root@$IP "sed -i 's/BOOTPROTO=.*/BOOTPROTO=none/' /etc/sysconfig/network-scripts/ifcfg-enp0s3; echo -e 'IPADDR=${newIP}\nGATEWAY=${YOURGW}' >>/etc/sysconfig/network-scripts/ifcfg-enp0s3"
   # Internal NIC
-  sshpass -p $VMPASS ssh root@$IP "echo -e 'TYPE=Ethernet\nBOOTPROTO=none\nNAME=enp0s8\nDEVICE=enp0s8\nONBOOT=yes\nIPADDR=$intIP' >/etc/sysconfig/network-scripts/ifcfg-enp0s8"
+  sshpass -p $VMPASS ssh $SSHOPTS root@$IP "echo -e 'TYPE=Ethernet\nBOOTPROTO=none\nNAME=enp0s8\nDEVICE=enp0s8\nONBOOT=yes\nIPADDR=$intIP' >/etc/sysconfig/network-scripts/ifcfg-enp0s8"
   echo "Rebooting VM"
-  sshpass -p $VMPASS ssh root@$IP "init 6"
+  sshpass -p $VMPASS ssh $SSHOPTS root@$IP "init 6"
 
   if ! grep "^export $machine" tmpconfig
   then
@@ -137,11 +137,11 @@ do
     fi
 
     echo "Copying master script"
-    sshpass -p $VMPASS scp src/master.sh src/fullcluster.yml src/lbstatus.yml root@${IP}:
+    sshpass -p $VMPASS scp $SSHOPTS src/master.sh src/fullcluster.yml src/lbstatus.yml root@${IP}:
     echo "Copying rke and kubectl binary"
-    sshpass -p $VMPASS scp files/rke files/kubectl root@${IP}:/var/tmp
+    sshpass -p $VMPASS scp $SSHOPTS files/rke files/kubectl root@${IP}:/var/tmp
     echo "Running master script"
-    sshpass -p $VMPASS ssh root@${IP} "mv fullcluster.yml cluster.yml; chmod +x master.sh; ./master.sh"
+    sshpass -p $VMPASS ssh $SSHOPTS root@${IP} "mv fullcluster.yml cluster.yml; chmod +x master.sh; ./master.sh"
   fi
 done
 

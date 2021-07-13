@@ -9,6 +9,6 @@ do
   then
     vagrant ssh proxy
   else
-    sshpass -p $VMPASS ssh root@$(grep "^export $host" tmpconfig | awk -F= '{print $2}')
+    sshpass -p $VMPASS ssh $SSHOPTS root@$(grep "^export $host" tmpconfig | awk -F= '{print $2}')
   fi
 done
