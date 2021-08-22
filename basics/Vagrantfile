@@ -1,7 +1,7 @@
 #Vagrant::Config.run do | config |
 Vagrant.configure(2) do | config |
   # Ubuntu 20.10
-  config.vm.define :ubuntu20 do | ubu20 |
+  config.vm.define :ubuntu do | ubu20 |
     ubu20.vm.provider "virtualbox" do | vb |
       vb.memory = 1024
       vb.name = "Ubuntu 20.10"
@@ -10,12 +10,22 @@ Vagrant.configure(2) do | config |
     ubu20.vm.box = "ubuntu/focal64"
   end
 
-  config.vm.define :alma8 do | alma8 |
+  config.vm.define :alma do | alma8 |
     alma8.vm.provider "virtualbox" do | vb |
       vb.memory = 1024
       vb.name = "Alma (RHEL) 8"
     end
     alma8.vm.host_name = "alma8"
     alma8.vm.box = "almalinux/8"
+  end
+
+  config.vm.define :fedora do | fedora |
+    fedora.vm.provider "virtualbox" do | vb |
+      vb.cpus = 4
+      vb.memory = 8096
+      vb.name = "Fedora 33"
+    end
+    fedora.vm.host_name = "fedora"
+    fedora.vm.box = "generic/fedora33"
   end
 end
