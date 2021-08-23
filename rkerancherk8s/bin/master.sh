@@ -2,45 +2,51 @@
 
 if [[ ! -e /vagrant/files/rke ]]
 then
+	echo "Downloading rke"
 	wget https://github.com/rancher/rke/releases/download/v1.2.8/rke_linux-amd64 -O /vagrant/files/rke
 fi
 
 if [[ ! -e /usr/local/bin/rke ]]
 then
+	echo "Making rke usable"
 	cp /vagrant/files/rke /usr/local/bin/rke
 	chmod +x /usr/local/bin/rke
 fi
 
-IP=$(ifconfig | grep -A1 enp0s8 | grep inet | awk '{print $2}')
+IP=$(ifconfig | grep -A1 enp0s8 | grep 'inet ' | awk '{print $2}')
+export IP
 
 # Get ssh key
+echo "Setting Vagrant user ssh key"
 cp /vagrant/.vagrant/machines/master/virtualbox/private_key /home/vagrant/.ssh/id_rsa
 chown vagrant:vagrant /home/vagrant/.ssh/id_rsa
 chmod 600 /home/vagrant/.ssh/id_rsa
-usermod -G docker vagrant
 
-cat >/home/vagrant/cluster.yml <<_END_
+echo "Creating single node cluster configuration file"
+echo "
 nodes:
-    - address: $IP
-      user: vagrant
-      role:
-        - controlplane
-        - etcd
-        - worker
-_END_
+- address: $IP
+  user: vagrant
+  role:
+  - controlplane
+  - etcd
+  - worker
+  ssh_key_path: /home/vagrant/.ssh/id_rsa
+" >/home/vagrant/cluster.yml
 
-# Install Docker
+echo "Installing Docker"
 apt-get -y update
-apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+apt-get -y install apt-transport-https ca-certificates curl gnupg lsb-release
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt-get -y update
 apt-get -y install docker-ce docker-ce-cli containerd.io jq
-
+usermod -G docker vagrant
 # This would create you a new cluster.yml file
 # rke config --name cluster.yml
 
-pwd
+echo "Home vagrant has the following files"
+ls /home/vagrant
 # Deploy cluster
 sudo -u vagrant rke up
 
