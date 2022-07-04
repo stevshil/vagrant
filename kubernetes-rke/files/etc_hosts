@@ -1,0 +1,7 @@
+127.0.0.1       localhost
+192.168.56.70 controller.localdomain master
+192.168.56.71 node1.localdomain node1
+192.168.56.72 node2.localdomain node2
+192.168.56.80 rancher.localdomain rancher
+192.168.56.81 proxy.localdomain proxy
+192.168.56.82 dockerreg.localdomain dockereg

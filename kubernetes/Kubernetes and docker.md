@@ -1,1 +1,0 @@
-/home/steve/Documents/Courses/TRAINING/DevOps Tools/Kubernetes/References/Kubernetes and docker.txt
