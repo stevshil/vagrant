@@ -10,6 +10,15 @@ Vagrant.configure(2) do | config |
     ubu20.vm.box = "ubuntu/focal64"
   end
 
+  config.vm.define :usrv do | usrv |
+    usrv.vm.provider "virtualbox" do | vb |
+      vb.memory = 1024
+      vb.name = "Ubuntu Server"
+    end
+    usrv.vm.host_name = "ubuserver"
+    usrv.vm.box = "ubuntu/focal64"
+  end
+
   config.vm.define :alma do | alma8 |
     alma8.vm.provider "virtualbox" do | vb |
       vb.memory = 1024
@@ -27,5 +36,14 @@ Vagrant.configure(2) do | config |
     end
     fedora.vm.host_name = "fedora"
     fedora.vm.box = "generic/fedora33"
+  end
+
+  config.vm.define :popos do | popos |
+    popos.vm.provider "virtualbox" do | vb |
+      vb.memory = 1024
+      vb.name = "Pop OS"
+    end
+    popos.vm.host_name = "popos"
+    popos.vm.box = "tranchung/PopOS-2004-x64"
   end
 end

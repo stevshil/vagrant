@@ -1,0 +1,6 @@
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+
+helm inspect values bitnami/mysql
+
+helm install -f values.yml mysql bitnami/mysql

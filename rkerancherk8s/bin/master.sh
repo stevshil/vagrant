@@ -13,8 +13,10 @@ then
 	chmod +x /usr/local/bin/rke
 fi
 
+sleep 10
 IP=$(ifconfig | grep -A1 enp0s8 | grep 'inet ' | awk '{print $2}')
 export IP
+echo "Guest IP: $IP"
 
 # Get ssh key
 echo "Setting Vagrant user ssh key"
@@ -113,3 +115,9 @@ sudo -u vagrant mkdir /home/vagrant/bin
 echo "kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get secret $(kubectl --kubeconfig kube_config_cluster.yml -n kubernetes-dashboard get sa/support -o jsonpath=\"{.secrets[0].name}\") -o go-template=\"{{.data.token | base64decode}}\"" >/home/vagrant/bin/getlogin
 chown vagrant:vagrant /home/vagrant/bin/getlogin
 chmod +x /home/vagrant/bin/getlogin
+
+mkdir .kube
+cp kube_config_cluster.yml .kube/config
+chown -R vagrant:vagrant /home/vagrant
+
+rm -f /vagrant/ubuntu-bionic-18.04-cloudimg-console.log

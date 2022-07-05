@@ -1,3 +1,8 @@
+# NOTE: This is now superceded by [kubernetes-rke](../kubernetes-rke/)
+
+This folder will soon be removed and will link to the newer version of this cluster build at [kubernetes-rke](../kubernetes-rke/)
+
+
 # RKE Rancher Cluster
 
 This configuration builds a K8s Cluster of 3 nodes;

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  labels:
+    app: registry
+  namespace: services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+      - name: registry
+        image: registry:2.7
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - mountPath: /var/lib/registry
+          name: registry-vol
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      volumes:
+      - name: registry-vol
+        persistentVolumeClaim:
+          claimName: registry-pvc

@@ -1,0 +1,13 @@
+https://artifacthub.io/packages/helm/bitnami/mysql
+
+  Gives the repo info
+
+#helm repo add artifact-hub https://artifacthub.github.io/helm-charts
+# helm install hub artifact-hub/artifact-hub
+helm repo add stable https://charts.helm.sh/stable
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+
+helm search hub petclinic --output json
+
+helm inspect values petclinic
