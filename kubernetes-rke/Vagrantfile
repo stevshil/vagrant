@@ -58,8 +58,8 @@ Vagrant.configure(2) do | config |
     rui.vm.host_name = "rui.localdomain"
     rui.vm.network "public_network", bridge: NICS, type: "dhcp"
     rui.vm.network "private_network", ip: "192.168.56.80"
-    rui.vm.provision :shell, :path => 'bin/allnodes.sh'
     rui.vm.provision :shell, :path => 'bin/rancherui.sh'
+    rui.vm.box = "bento/almalinux-8.3"
   end
 
   # Load balancer external

@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Remove podman
+dnf -y erase podman buildah
+
+# Install docker
+dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+dnf -y install docker-ce docker-ce-cli containerd.io
+usermod -G docker vagrant
+systemctl enable --now docker.service
+
 # rm -f /etc/resolv.conf
 
 # if [[ -n $YOURDNS ]]
@@ -10,4 +19,4 @@
 # fi
 
 # Start Rancher web UI manager
-docker run -d --restart=unless-stopped -P --name=rancherui --privileged rancher/rancher
+docker run -d --restart=unless-stopped -p 1180:80 -p 2443:443 --name=rancherui --privileged rancher/rancher:v2.5-head
