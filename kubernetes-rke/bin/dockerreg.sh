@@ -1,9 +1,13 @@
 #!/bin/bash
 
+mkdir /home/vagrant/certs
+
 # Generate certificates if you plan to use SSL
 openssl req \
-  -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key \
-  -x509 -days 36500 -out certs/domain.crt
+  -newkey rsa:4096 -nodes -sha256 -keyout /home/vagrant/certs/domain.key \
+  -x509 -days 36500 -out /home/vagrant/certs/domain.crt -subj "/C=training/ST=global/L=any/O=training/OU=all/CN=*/"
+
+chown -R vagrant:vagrant /home/vagrant/certs
 
 # Launch container
 docker run -itd -p 5000:5000 \

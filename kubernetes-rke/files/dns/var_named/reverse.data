@@ -1,0 +1,14 @@
+$TTL    86400
+@                 IN SOA          tps.local. root.tps.local. (
+1     ; serial
+1H      ; refresh
+1M      ; retry
+1W      ; expiry
+1D)     ; minimum
+@   IN NS   ns1.tps.local.
+82  IN PTR  ns1.tps.local.
+70  IN PTR  controller
+71  IN PTR  worker1
+72  IN PTR  worker2
+80  IN PTR  rui
+81  IN PTR  proxy

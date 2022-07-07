@@ -11,3 +11,6 @@ ln -s /usr/local/bin/kubectl /bin/kubectl
 # Set up cluster
 cp /vagrant/files/cluster.yml /home/vagrant/cluster.yml
 sudo -u vagrant rke up --config cluster.yml
+
+# Copy current kubeconfig to /vagrant folder, so GUI can obtain it
+cp kube*config /vagrant/kube_config

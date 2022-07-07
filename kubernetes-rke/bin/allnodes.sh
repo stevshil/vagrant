@@ -32,3 +32,19 @@ if ! systemctl restart docker.service
 then
     systemctl start docker.service
 fi
+
+if ! (ip a show eth2 | grep 192.168.56.82) >/dev/null 2>&1
+then
+    rm -f /etc/resolv.conf
+    
+    if systemctl status NetworkManager >/dev/null 2>&1
+    then
+        sed -i '/\[main\]/a\dns=none' /etc/NetworkManager/NetworkManager.conf
+        systemctl restart NetworkManager
+    else
+        systemctl disable --now systemd-resolved.service
+        systemctl disable --now 
+    fi
+
+    echo -e "nameserver 192.168.56.82\nsearch 192.168.56.82" >/etc/resolv.conf
+fi >/dev/null 2>&1

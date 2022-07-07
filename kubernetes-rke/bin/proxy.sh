@@ -4,12 +4,6 @@ systemctl disable --now ufw
 systemctl disable --now apparmor
 systemctl disable --now firewalld
 
-# # Kill systemd resolved
-# systemctl disable --now systemd-resolved.service
-
-# rm -f /etc/resolv.conf
-# echo -e "nameserver $YOURDNS\nsearch $YOURDOMAIN" >/etc/resolv.conf
-
 if [[ -e /etc/lsb-release ]]
 then
 	instcmd=apt-get

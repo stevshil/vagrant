@@ -1,0 +1,17 @@
+$TTL            86400
+@                 IN SOA            tps.local.  root.tps.local. (
+1     ; serial
+1H      ; refresh
+1M      ; retry
+1W      ; expiry
+1D )    ; minimum
+@                       IN NS       ns1.tps.local.
+@                       IN A        192.168.56.82
+ns1                     IN A        192.168.56.82
+controller  			IN A        192.168.56.70
+worker1                 IN A        192.168.56.71
+worker2                 IN A        192.168.56.72
+rui                     IN A        192.168.56.80
+proxy                   IN A        192.168.56.81
+k8s                     IN CNAME    proxy
+*.k8s                   IN CNAME    proxy
