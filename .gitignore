@@ -1,4 +1,7 @@
 **/nohup.out
+**/*.jar
+**/*.gz
+**/*.zip
 files/ITRS/*
 neueda/files/ITRS/trade-app-0.1.0.jar
 neueda/files/itrs/*.jar
