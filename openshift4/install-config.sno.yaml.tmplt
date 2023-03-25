@@ -1,0 +1,24 @@
+apiVersion: v1
+baseDomain: okd.local
+metadata:
+  name: lab
+compute:
+- hyperthreading: Enabled
+  name: worker
+  replicas: 0
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  replicas: 2
+networking:
+  networkType: $NETTYPE
+  clusterNetwork:
+  - cidr: 10.128.0.0/14 
+    hostPrefix: 23 
+  serviceNetwork: 
+  - 172.30.0.0/16
+platform:
+  none: {}
+fips: false
+pullSecret: '$PULLSECRET'
+sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDXedbvoS+LL58bsWwqPS5KlP7xtMYAXh0N1QjTXXuWKcj7neleHuJQwJ/z2Y0fDLYcNcM6oYX8ltqCOO210+6eaeHt/zTb2cfgTNZBRtSDKk+lcJTPE/AI7TxISuRWArhnlGtYBASuCAgzxGLj9slGWMVAjnZ1/vTJ4Kqxw9OrsW6f0dCJDncRai2/owGXg+7SVUIexxLeXBMnSVGm1POgm9YIMkh68fOceEN01u1dOjRjd4/V+1eGpjDUyhCm7oZXqcIA5ysQUT7wASokN04zDxcDcyt81F47Lg4tnK9FdiPC3oWxNNfZsx7wi+ul6IWar/DdBMG6GoLNH5AxRNMJ+bbylz/3507dHkhX8V2yju+lE9XnL65zgZs3yLAkEW2PapjA6wYH5BFoYhF7vsVuOWzk6qvwt3S1d5Xf8DwJNzLPAIHMc4racMB4HjUiWFFMxDvqg2qylavcr5laqrOLm1F29O8eHt78HnvI/qBCSv3RxfdWIkC2yzw5RU+CEd0= core@k8s.localdomain'

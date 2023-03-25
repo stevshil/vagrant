@@ -89,6 +89,6 @@ timeout 30
 menu title Control Plane Installer
 label controller
     KERNEL fedora-coreos-37.20230303.3.0-live-kernel-x86_64
-    APPEND initrd=fedora-coreos-37.20230303.3.0-live-initramfs.x86_64.img,fedora-coreos-37.20230303.3.0-live-rootfs.x86_64.img ip=192.168.10.200::192.168.10.1:255.255.255.0:::none nameserver=192.168.10.210 coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://192.168.10.210:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://192.168.10.210:8080/okd4/master.ign
+    APPEND initrd=fedora-coreos-37.20230303.3.0-live-initramfs.x86_64.img,fedora-coreos-37.20230303.3.0-live-rootfs.x86_64.img ip=192.168.10.201::192.168.10.1:255.255.255.0:::none nameserver=192.168.10.210 coreos.inst.install_dev=/dev/sda coreos.inst.image_url=http://192.168.10.210:8080/okd4/fcos.raw.xz coreos.inst.ignition_url=http://192.168.10.210:8080/okd4/master.ign
 IPAPPEND 2
 EOF

@@ -1,0 +1,4 @@
+.vagrant
+pull-secret.txt
+**/*.iso
+private/
