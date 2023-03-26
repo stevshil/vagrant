@@ -34,9 +34,10 @@ if grep '^dns' /etc/NetworkManager/NetworkManager.conf >/dev/null 2>&1
 then
     echo "NM OK"
 else
-    sed -i '/\[main\]/a\dns=none' /etc/NetworkManager/NetworkManager.conf
-    systemctl restart NetworkManager
+    sed -i '/\[main\]/a\dns=none\nrc-manager=unmanaged' /etc/NetworkManager/NetworkManager.conf
 fi
+systemctl restart NetworkManager
+sleep 5
 
 echo "Set nsswitch file"
 sed -i 's/hosts:.*files myhostname .*$/hosts:     files myhostname dns/' /etc/nsswitch.conf
@@ -86,6 +87,11 @@ PSECRET=$(cat /vagrant/private/pull-secret.txt)
 NETTYPE=OpenShiftSDN
 sed -e "s/\$PULLSECRET/$PSECRET/" -e 's/$NETTYPE/OVNKubernetes/' /vagrant/install-config.sno.yaml.tmplt >/okdconfig/install_dir/install-config.yaml
 openshift-install create manifests --dir=/okdconfig/install_dir/ || exit 3
+cp /vagrant/htpasswd_provider.yaml /okdconfig/install_dir/manifests
+# Set the cluster proxy to none
+#sed -i -e '/trustedCA:/d' -e '/name: ""/d' /okdconfig/install_dir/manifests/cluster-proxy-01-config.yaml
+# Backup the manifests
+cp -r /okdconfig/install_dir /okdconfig/manifests
 openshift-install create ignition-configs --dir=/okdconfig/install_dir/ || exit 4
 mkdir /var/www/html/okd4
 cp -R /okdconfig/install_dir/* /var/www/html/okd4/ || exit 5
@@ -108,7 +114,7 @@ chmod -R 755 /var/www/html/
 cat >/usr/local/bin/check-bootstrap <<_EOD
 #!/bin/bash
 cd /okdconfig
-openshift-install wait-for bootstrap-complete --dir install_dir/ --log-level info
+openshift-install wait-for bootstrap-complete --dir install_dir/ --log-level debug
 _EOD
 
 chmod +x /usr/local/bin/check-bootstrap
@@ -116,7 +122,7 @@ chmod +x /usr/local/bin/check-bootstrap
 cat >/usr/local/bin/check-install <<_EOD
 #!/bin/bash
 cd /okdconfig
-openshift-install wait-for install-complete --dir install_dir/ --log-level info
+openshift-install wait-for install-complete --dir install_dir/ --log-level debug
 _EOD
 
 chmod +x /usr/local/bin/check-install

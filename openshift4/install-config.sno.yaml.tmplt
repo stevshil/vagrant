@@ -9,7 +9,7 @@ compute:
 controlPlane:
   hyperthreading: Enabled
   name: master
-  replicas: 2
+  replicas: 1
 networking:
   networkType: $NETTYPE
   clusterNetwork:
